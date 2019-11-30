@@ -1,0 +1,5 @@
+in angular, a service can only be injected into a class that has some 'metadata', 
+examples of metadata include @Component, @Directive, etc..
+
+to inject a service into another service, the 'metadata' that you include on the receiving service is @Injectable()
+nothing needs to be added to the service that will be injected, just the receiving service

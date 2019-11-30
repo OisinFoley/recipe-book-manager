@@ -1,0 +1,5 @@
+<div *ngIf="name === 'Oisín'">
+
+behind the scenes, is translated to 
+
+<ng-template [ngIf]="name === 'Oisín'">

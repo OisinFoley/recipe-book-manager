@@ -1,0 +1,14 @@
+the prop on the left (inside a square bracket) is what we are about to set,
+and the value on the right is the component property we want to pass in as the value
+see below example, we grab srcURL from component and assign it as the img element's src
+
+class {
+    this.srcURL = "http://pexels/image.jpg"
+}
+
+<img [src]="srcURL" />
+    |
+    |
+<img src="http://pexels/image.jpg" />
+
+to put something between oopening and closing tag, we use interpolation {{something}} as before

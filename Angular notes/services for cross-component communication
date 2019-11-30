@@ -1,0 +1,15 @@
+you could define an EventEmitter in your service, and then have 2 services consuming the service
+
+1 of the components can emit something through the EventEmitter you defined,
+e.g. - statusUpdated
+
+and the 2nd component could be subsribed to that EventEmitter (1 way is to define this in its ctor)
+, which would look something like so:
+
+//1. component that emits
+this.someService.statusUpdated.emit('some string that other component will be made aware of')
+
+//2. component that consumes / subscribes
+constructor(private someService: SomeService) {
+	this.someService.statusUpdated.subscribe(message: string) => alert(message);
+}

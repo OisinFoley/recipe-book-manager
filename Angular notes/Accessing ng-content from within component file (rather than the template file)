@@ -1,0 +1,22 @@
+give alias to the content, see "#contentParagraph"
+
+<app-server-element
+        *ngFor="let serverElement of serverElements"
+        [element]="serverElement"
+      >
+        <p #contentParagraph>
+          <strong *ngIf="serverElement.type === 'server'">{{ serverElement.content }}</strong>
+          <em *ngIf="serverElement.type === 'blueprint'">{{ serverElement.content }}</em>
+        </p>
+</app-server-element>
+
+in the component being called (i.e. - app-server-element),
+grab the wrapped content passed that was passed in, and give it a new alias
+
+@ContentChild('contentParagraph', {static: true}) paragraph: ElementRef;
+
+Then, act upon it in a lifecycle hook, or a func
+
+ngAfterViewInit() {
+      console.log('text content of pargraph: ' + this.paragraph.nativeElement.textContent);
+}

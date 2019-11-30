@@ -1,0 +1,34 @@
+angular router has something built into it where you can define a class that implments Resolve<T>
+as a property of a route (when defining your list of Routes in app.module or app-routing.module or similar)
+
+in this service that implements 'Resolve', you can make a call to a service, then the returned data will be injected into the route you're navigating to, under the property name provided when you declared what resolver to use for that route in your app.module / app-routing.module etc. like so:
+
+// app.module
+...other route declarations,
+{ path: 'servers',
+    // canActivate: [AuthGuard],
+    canActivateChild: [AuthGuard],
+    component: ServersComponent,
+    children: [
+      { path: ':id', component: ServerComponent, resolve: { server: ServerResolver } },
+      { path: ':id/edit', component: EditServerComponent, canDeactivate: [CanDeactivateGuard] }
+  ]},
+
+we call ServerResolver, and it looks like so:
+
+interface Server {
+  id: number;
+  name: string;
+  status: string;
+}
+
+// we implement interface which says that we will have a function named resolve and that the type we will implemene that func with is a Server class
+// then, we just call our service and return the value of type Server
+export class ServerResolver implements Resolve<Server> {
+  constructor(private serversService: ServersService) {}
+
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot)
+    : Observable<Server> | Promise<Server> | Server {
+    return this.serversService.getServer(+route.params['id']);
+  }
+}

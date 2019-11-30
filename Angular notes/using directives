@@ -1,0 +1,17 @@
+there are some build-in directives, one of whih is ngIf
+it is defined with an asterisk, *ngIf="serverCreated", the asterisk meaning it is a structural directive and directly interacts with the DOM (i.e. adds or removes, as opposed to hiding visibility of an element)
+
+to do a false check, you can do an *ngIf="!someProp"
+OR
+when defining your truthy if value, do this
+
+*ngIf="someProp; else noServer" ,then we directly define a template wherever we would liek the alternative templating to be displayed
+
+full example:
+
+<p *ngIf="someProp; else noServer"> something </p>
+<ng-template #noServer>
+  <p> not something </p>
+</ng-template>
+
+*ngIf (in truthy and falsy form) is the example you're most likely to use according to the instructor of the angular 8 course

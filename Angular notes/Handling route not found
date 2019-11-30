@@ -1,0 +1,10 @@
+define a not found route like any other,
+
+{ route: 'not-found', component: NotFoundComponent },
+...
+
+then as your very last route (otherwise all routes will follow the upcoming behaviour),
+define a wildcard to catch all non-defined routes, like so:
+
+...
+{ route: '**', redirectTo: '/not-found' }

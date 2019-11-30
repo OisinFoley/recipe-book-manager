@@ -1,0 +1,28 @@
+in app.module ->
+define route in your routes array prop of type Routes like so:
+
+{ path: 'servers', component: ServersComponent, children: [
+    { path: ':id', component: ServerComponent },
+    { path: ':id/edit', component: EditServerComponent }
+]}
+
+then in the template of the ServersComponent,
+define a <route-outlet> element
+
+with this, you can load the content that's in your serversComponent, then load the content of
+serverComponent (notice it's single) or the editComponent
+
+--------------------------------------------------------
+maintaining queryParameters when we nav from 1st to 2nd route, and then onto 3rd without re specifying the queryParams when we navigate ot the 3rd route.
+
+if we are on /servers, then this will call a relative path, aswell as preserving any query params we passed when we previously navigated to /servers.
+if we were defining new params, then we wouls say merge instea do preserve
+this.router.navigate(['edit'],
+{
+        relativeTo: this.route,
+        queryParamsHandling: 'preserve'
+});
+
+this keeps old queryParams and adds &page=2 to the url
+queryParams: { page: 2 },  queryParamsHandling: "merge"
+

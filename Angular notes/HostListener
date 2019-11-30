@@ -1,0 +1,11 @@
+a way to listen for events on the DOM and react to them in combination with Renderer2
+
+e.g. - 
+
+this example was used in a directive, and at this time, I think it can only be used there and not in components
+
+@HostListener('mouseenter') mouseover(eventData: Event) {
+    this.renderer.setStyle(this.elRef.nativeElement, 'background-color', 'blue');
+}
+
+we listen for a hover on an element, then combine it with Renderer2 to change a DOM element

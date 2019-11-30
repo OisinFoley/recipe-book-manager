@@ -1,0 +1,13 @@
+in the directives deep dive section of the course, we see a 'basic directive' approach - which is discouraged - as well as a 'better directive'
+
+the basic approach directly accesses an elementRef's nativeElement.
+this can be troulesome if using service workers, as the service worker will have not access to the DOM, which is what directly using elementRef.nativeElement does.
+
+if we use the 'better directive', we can handle the scenariod where we do/don't have DOM access
+in the better directive, we also define an Renderer2 type in the ctor
+
+Note: Renderer2 is a class used to setstyles before a DOM or DOM-like tree has been put in place, hence why we could use it in a service worker.
+The '2' means nothing special, it's just an evolution on what the original Renderer type was.
+Renderer is an @angular/core type
+
+With the above in mind, the Renderer type should be used for DOM manipulation

@@ -1,0 +1,7 @@
+the prop receiving the prop must still have a prop marked as an @Input() in its component file,
+BUT when the parent is passing in a prop that is a string (this only applies to strings),
+you can pass the prop without defining the prop in square brackets.
+
+so you can do <my-comp name="user.name"> instead of <my-comp [name]="user.name">
+
+this is ONLY TRUE FOR STRINGS
