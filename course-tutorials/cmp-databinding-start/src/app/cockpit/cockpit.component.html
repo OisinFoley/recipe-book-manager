@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="col-xs-12">
+    <p>Add new Servers or blueprints!</p>
+    <label>Server Name</label>
+    <input
+      type="text"
+      class="form-control"
+      [(ngModel)]="newServerName">
+
+    <!-- 1. way to use local reference instead of direct binding -->
+    <!-- <input
+      type="text"
+      class="form-control"
+      #serverNameInput> -->
+    <label>Server Content</label>
+    <input type="text" class="form-control" [(ngModel)]="newServerContent">
+
+    <!-- 2. another way to get direct access to the DOM element without using binding -->
+    <!-- see appropriate comment in component file-->
+    <!-- <input type="text" class="form-control" #serverContentInput> -->
+    <br>
+    <button
+      class="btn btn-primary"
+      (click)="onAddServer()">Add Server</button>
+    <!-- part of 1. <button
+      class="btn btn-primary"
+      (click)="onAddServer(serverNameInput)">Add Server</button> -->
+    <button
+      class="btn btn-primary"
+      (click)="onAddBlueprint()">Add Server Blueprint</button>
+  </div>
+</div>
