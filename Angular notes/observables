@@ -1,0 +1,43 @@
+you can create custom observables,
+and use what are known as 'operators' in rxjs to act upon the new data before it reaches the subscriber.
+2 that i've used so far are:
+
+- pipe (allows you to do validation and prevent a value from passing through to the observer)
+- map (allows you to format the data coming through to the observer)
+
+as well as that, we saw that in the observer chain of events,
+we have our operator functions being called, then the subscriber receives the data
+we may also have an error and can act upon it - an error in an observer causes it to cancel, hence no further values received and no other way to tidy up.
+should the observer finish (can call observerAlias.delete() inside of the Observable.create promise), then we have a tidy up function that is last in the chain of functions.
+see example below
+
+// pipe and map come before the subcriber receives new values
+this.firstObsSubscription = customObservable.pipe(filter(data => {
+      // return true;
+      return +data % 2 === 0;
+    }), map((data: number) => {
+      return `Round: ${data + 1}`;
+    })).subscribe(count => {
+      console.log(count);
+    }, error => {
+      console.log('error');
+      // alert(error.message);
+    }, () => { // this is the tidy up func
+      console.log('observer complete');
+    })
+
+instead of EventEmitter, it is recommended as a design pattern to use a Subject (fulfills same duty) when trying to achieve cross component communication
+
+this.activatedSub = this.userService.activatedEmitter.subscribe(didActivate => {
+      this.userActivated = didActivate;
+});
+
+instead of:
+// this.userService.activatedEmitter.emit(true);
+do 
+   this.userService.activatedEmitter.next(true);
+
+and instead of this in your service:
+// activatedEmitter = new EventEmitter<boolean>();
+do
+   activatedEmitter = new Subject<boolean>();
