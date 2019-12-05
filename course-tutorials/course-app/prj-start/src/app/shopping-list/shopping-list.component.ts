@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.css']
 })
-export class ShoppingListComponent implements OnInit {
+export class ShoppingListComponent implements OnInit, OnDestroy {
   ingredients: Ingredient[];
+  private ingredChangeSub: Subscription;
   constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit() {
@@ -26,8 +28,12 @@ export class ShoppingListComponent implements OnInit {
     // subscriber is also here in shopping-list.component
     // therefore, with above approach the pub sub logic is in 2 components outside of the service
     // but with this approach 1 part of the pub/sub logic remains inside the service
-    this.shoppingListService.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
+    this.ingredChangeSub = this.shoppingListService.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
       this.ingredients = ingredients
     });
+  }
+  
+  ngOnDestroy(): void {
+    this.ingredChangeSub.unsubscribe();
   }
 }
