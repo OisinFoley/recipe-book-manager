@@ -28,9 +28,16 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     // subscriber is also here in shopping-list.component
     // therefore, with above approach the pub sub logic is in 2 components outside of the service
     // but with this approach 1 part of the pub/sub logic remains inside the service
-    this.ingredChangeSub = this.shoppingListService.ingredientsChanged.subscribe((ingredients: Ingredient[]) => {
-      this.ingredients = ingredients
-    });
+    this.ingredChangeSub =
+      this.shoppingListService.ingredientsChanged
+        .subscribe((ingredients: Ingredient[]) => {
+            this.ingredients = ingredients
+          }
+        );
+  }
+
+  onEditItem(index: number) {
+    this.shoppingListService.startedEditing.next(index);
   }
   
   ngOnDestroy(): void {
