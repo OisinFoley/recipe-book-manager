@@ -42,3 +42,28 @@ in a template-driven form (which all of the above notes are for), the ngModel (w
 
 just remember though, that [ngModel] and [(ngModel)] can be used in a form for 1 and 2-way data binding
 
+--------------------------------
+
+can set all the values in a form at once, using the following syntax
+// this.signupForm.setValue({
+    //   userData: {
+    //     username: suggestedName,
+    //     email: ''
+    //   },
+    //   secret: 'pet',
+    //   questionAnswer: '',
+    //   gender: 'male'
+    // });
+signupForm is reference to @ViewChild
+userData is an #ngModelGroup
+the other params (including children of userData) are just the template props name's values
+
+can also update individual form prop:
+this.signupForm.form.patchValue({
+  userData: {
+    username: suggestedName
+  }
+});
+
+and then to reset after submission:
+this.signupForm.reset();

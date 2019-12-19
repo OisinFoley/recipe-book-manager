@@ -1,0 +1,28 @@
+can transform some output in your template without altering the value itself as it appears in other parts of your components / services
+
+some built-in examples include:
+{{ name | uppercase }}
+{{ dateJoined | date }}
+{{ dateJoined | date:'fullDate' }}
+	// some pipes take multiple params, pass like so:
+	{{ dateJoined | date:'fullDate':'someOtherDateProp' }}
+can also join pipes:
+{{ dateJoined | date:'fullDate' | uppercase }}
+sometimes order is important, such as here:
+putting uppercase before date would flag an error, as the output would still be a date object, and the compiler wouldn't know how to convert it to uppercase, hence why we must parse it first, then call the uppercase pipe
+
+important note:
+pipes can take params, as we know
+a pipe will not recompute, whenever the date that was passed into it changes.
+instead, the data itself must change in the form of a binding
+
+an example, if you have a pipe to convert everything to uppercase,
+and a separate button to add a new element to the list of element sbeing converted to uppercase
+if we also had a pipe which mutated the list being outputted, then we wouldnt see any of the new elements that were added via a button click, until the pipe has to recompute -> a change to the filtering input would cause a recompute of the filter, hence allowing the new elements to appear in the list
+
+put simply, the list of elements would be updated in the background, but the filtering pipe wouldn't recompute its list until the input it takes for filtering is updated
+
+this is for a custom filter pipe, there's isn't a built in pipe
+also, the pipe would need to get new primitive, changes to object or array params wouldn't trigger a recomputation
+
+you can tell your pipe to recompute whenever there's a change to the data (not just a change to the pipe param) by setting a prop in its decorator to pure: false
