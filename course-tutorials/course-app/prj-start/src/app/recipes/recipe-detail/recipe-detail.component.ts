@@ -37,9 +37,14 @@ export class RecipeDetailComponent implements OnInit {
     // this.router.navigate(['../', this.id, 'edit'], { relativeTo: this.route });
   }
 
-  // onAddToShoppingList() {
-  //   this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
-  // }
+  onAddToShoppingList() {
+    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+  }
+
+  onDeleteRecipe() {
+    this.recipeService.deleteRecipe(this.id);
+    this.router.navigate(['/recipes'])
+  }
 }
 // commented code redundant once we implemented routing, but can serve as a reference of a 
 // non-routing way to handle navigation and conditional displaying of components
