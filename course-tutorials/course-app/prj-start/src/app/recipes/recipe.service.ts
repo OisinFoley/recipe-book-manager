@@ -5,7 +5,8 @@ import { Ingredient } from "../shared/ingredient.model";
 import { ShoppingListService } from "../shopping-list/shopping-list.service";
 import { Subject } from "rxjs";
 
-@Injectable()
+// @Injectable()
+@Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
   // do not need eventemitter nor subject since we added routing, this approach is no longer needed
@@ -13,22 +14,32 @@ export class RecipeService {
   // note: we're still using a subject in the shopping list components
   // recipeSelected = new EventEmitter<Recipe>();
   // recipeSelected = new Subject<Recipe>();
-  private recipes: Recipe[] = [
-    new Recipe('Num 1 Test Recipe', 'the original and 1st recipe - just a test',
-      'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
-      [
-        new Ingredient('Potatoes', 7),
-        new Ingredient('Chicken Breasts', 2)
-      ]),
-    new Recipe('Num 2 Test Recipe', 'the 2nd recipe',
-      'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
-      [
-        new Ingredient('Salmon', 1),
-        new Ingredient('Carrots', 12)
-      ])
-  ];
+
+  // redundant since we added Http class functionality
+  // private recipes: Recipe[] = [
+  //   new Recipe('Num 1 Test Recipe', 'the original and 1st recipe - just a test',
+  //     'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
+  //     [
+  //       new Ingredient('Potatoes', 7),
+  //       new Ingredient('Chicken Breasts', 2)
+  //     ]),
+  //   new Recipe('Num 2 Test Recipe', 'the 2nd recipe',
+  //     'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
+  //     [
+  //       new Ingredient('Salmon', 1),
+  //       new Ingredient('Carrots', 12)
+  //     ])
+  // ];
+
+  private recipes: Recipe[] = [];
 
   constructor(private shoppingListService: ShoppingListService) {}
+
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    // this.recipesChanged.next(this.recipes.slice());
+    this.recipesChanged.next(this.recipes);
+  }
 
   getRecipes() {
     return this.recipes.slice();
