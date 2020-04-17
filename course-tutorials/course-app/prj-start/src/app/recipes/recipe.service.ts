@@ -1,11 +1,12 @@
-import { Recipe } from "./recipe.model";
-import { EventEmitter, Injectable } from "@angular/core";
-// import { Subject } from "rxjs";
-import { Ingredient } from "../shared/ingredient.model";
-import { ShoppingListService } from "../shopping-list/shopping-list.service";
-import { Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { Ingredient } from '../shared/ingredient.model';
+import { Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
-// @Injectable()
+import { Recipe } from './recipe.model';
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions';
+import * as fromApp from '../store/app.reducer';
+
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
@@ -15,29 +16,14 @@ export class RecipeService {
   // recipeSelected = new EventEmitter<Recipe>();
   // recipeSelected = new Subject<Recipe>();
 
-  // redundant since we added Http class functionality
-  // private recipes: Recipe[] = [
-  //   new Recipe('Num 1 Test Recipe', 'the original and 1st recipe - just a test',
-  //     'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
-  //     [
-  //       new Ingredient('Potatoes', 7),
-  //       new Ingredient('Chicken Breasts', 2)
-  //     ]),
-  //   new Recipe('Num 2 Test Recipe', 'the 2nd recipe',
-  //     'https://storage.needpix.com/rsynced_images/gastronomy-2760200_1280.jpg',
-  //     [
-  //       new Ingredient('Salmon', 1),
-  //       new Ingredient('Carrots', 12)
-  //     ])
-  // ];
-
   private recipes: Recipe[] = [];
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(
+    private store: Store<fromApp.AppState>
+  ) {}
 
   setRecipes(recipes: Recipe[]) {
     this.recipes = recipes;
-    // this.recipesChanged.next(this.recipes.slice());
     this.recipesChanged.next(this.recipes);
   }
 
@@ -50,7 +36,7 @@ export class RecipeService {
   }
 
   addIngredientsToShoppingList(ingredients: Ingredient[]) {
-    this.shoppingListService.addIngredients(ingredients);
+    this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients));
   }
 
   addRecipe(recipe: Recipe) {
