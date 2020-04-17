@@ -23,51 +23,6 @@ export class AuthService {
     private store: Store<fromApp.AppState>
   ) {}
 
-  signup(email: string, password: string) {
-    // return this.http.post<AuthResponse>(
-    //   'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyA-_x0ng8JNhQzLtg-r88jM3j7OOjo3q8M',
-    //   {
-    //     email,
-    //     password,
-    //     returnSecureToken: true
-    //   }
-    // )
-    // .pipe(
-    //   catchError(this.handleError),
-    //   tap(resData => {
-    //   // TODO: these props are firebase-specific and need updating when switching auth handler
-    //     this.handleAuthentication(
-    //       resData.email,
-    //       resData.localId,
-    //       resData.idToken,
-    //       +resData.expiresIn
-    //     );
-    // }));
-  }
-
-  login(email: string, password: string) {
-    // return this.http.post<AuthResponseData>(
-    //   'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyA-_x0ng8JNhQzLtg-r88jM3j7OOjo3q8M',
-    //   {
-    //     email,
-    //     password,
-    //     returnSecureToken: true
-    //   }
-    // )
-    // .pipe(
-    //   catchError(this.handleError),
-    //   tap(resData => {
-    //     // TODO: these props are firebase-specific and need updating when switching auth handler
-    //     this.handleAuthentication(
-    //       resData.email,
-    //       resData.localId,
-    //       resData.idToken,
-    //       +resData.expiresIn
-    //     );
-    //   })
-    // );
-  }
-
   autoLogin() {
     const userData: UserData = JSON.parse(localStorage.getItem('userData'));
 
@@ -86,13 +41,7 @@ export class AuthService {
 
     if (loadedUser.token) {
       this.store.dispatch(
-        new AuthActions.AuthenticateSuccess({
-          // ...loadedUser
-          email: loadedUser.email,
-          userId: loadedUser.userId,
-          token: loadedUser.token,
-          tokenExpirationDate: new Date(loadedUser.tokenExpirationDate)
-        })
+        new AuthActions.AuthenticateSuccess({ ...loadedUser })
       );
       const expirationDate =
         new Date(userData.tokenExpirationDate).getTime() -
@@ -117,31 +66,11 @@ export class AuthService {
         tokenExpirationDate
       );
       this.store.dispatch(
-        new AuthActions.AuthenticateSuccess({ email, userId, token, tokenExpirationDate })
+        new AuthActions.AuthenticateSuccess({ ...user })
       );
       // TODO: the expiresIn value uses seconds as its unit, update this if switching auth provider
       this.autoLogout(expiresIn * 1000);
       localStorage.setItem('userData', JSON.stringify(user));
-  }
-
-  private handleError(errorResponse: HttpErrorResponse) {
-    // let errorMessage = 'An unknown error occurred';
-    // // TODO: this is a firebase specific payload and should be updated when moving to Cognito
-    // if (!errorResponse.error || !errorResponse.error.error) {
-    //   return throwError(errorMessage);
-    // }
-    // switch (errorResponse.error.error.message) {
-    //   case 'EMAIL_EXISTS':
-    //     errorMessage = 'This email already exists';
-    //     break;
-    //   case 'EMAIL_NOT_FOUND':
-    //     errorMessage = 'This email does not exist';
-    //     break;
-    //   case 'INVALID_PASSWORD':
-    //     errorMessage = 'This password is not correct';
-    //     break;
-    // }
-    // return throwError(errorMessage);
   }
 
   logout() {
