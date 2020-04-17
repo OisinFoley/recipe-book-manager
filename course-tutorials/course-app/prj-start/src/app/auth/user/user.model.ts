@@ -3,15 +3,15 @@ import { UserData } from 'src/app/interfaces/user-data';
 export class User implements UserData {
   constructor(
     public email: string,
-    public _id: string,
-    public _token: string,
-    public _tokenExpirationDate: Date
+    public userId: string,
+    public token: string,
+    public tokenExpirationDate: Date
   ) {}
 
-  get token() {
-    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
-      return null;
-    }
-    return this._token;
-  }
+  // get token() {
+  //   if (!this.tokenExpirationDate || new Date() > this.tokenExpirationDate) {
+  //     return null;
+  //   }
+  //   return this.token;
+  // }
 }

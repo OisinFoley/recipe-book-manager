@@ -1,27 +1,42 @@
-import { Component, ComponentFactoryResolver, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ComponentFactoryResolver, ViewChild, OnDestroy, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
 
-import { AuthService, AuthResponseData } from './auth.service';
+import { AuthService } from './auth.service';
 import { AlertComponent } from '../shared/alert/alert.component';
 import { PlaceholderDirective } from '../shared/placeholder/placeholder.directive';
+import { AuthResponse } from './interfaces/auth-response';
+import * as fromApp from '../store/app.reducer';
+import * as AuthActions from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html'
 })
-export class AuthComponent implements OnDestroy {
+export class AuthComponent implements OnInit, OnDestroy {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private componentFactoryResolver: ComponentFactoryResolver
+    private componentFactoryResolver: ComponentFactoryResolver,
+    private store: Store<fromApp.AppState>
   ) {}
   isLoginMode = true;
   isLoading = false;
   error: string = null;
   private closeSub: Subscription;
   @ViewChild(PlaceholderDirective, { static: false }) alertHost: PlaceholderDirective;
+
+  ngOnInit() {
+    this.store.select('auth').subscribe((authState) => {
+      this.isLoading = authState.loading;
+      this.error = authState.authError;
+      if (this.error) {
+        this.showErrorAlert(this.error);
+      }
+    });
+  }
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
@@ -33,28 +48,14 @@ export class AuthComponent implements OnDestroy {
     }
     const { email, password } = form.value;
 
-    let authObs: Observable<AuthResponseData>;
+    let authObs: Observable<AuthResponse>;
 
     this.isLoading = true;
     if (this.isLoginMode) {
-      authObs = this.auth.login(email, password);
+      this.store.dispatch(new AuthActions.LoginStart({ email, password }));
     } else {
-      authObs = this.auth.signup(email, password);
+      // authObs = this.auth.signup(email, password);
     }
-
-    authObs.subscribe(
-      res => {
-        console.log(res);
-        this.isLoading = false;
-        this.router.navigate(['/recipes']);
-      },
-      errorResponse => {
-        console.log(errorResponse);
-        this.error = errorResponse;
-        this.showErrorAlert(errorResponse);
-        this.isLoading = false;
-      }
-    );
 
     form.reset();
   }
@@ -85,12 +86,4 @@ export class AuthComponent implements OnDestroy {
       this.closeSub.unsubscribe();
     }
   }
-
-  // onRegister() {
-  //   this.auth.register();
-  // }
-
-  // onLogin() {
-  //   this.auth.login();
-  // }
 }
