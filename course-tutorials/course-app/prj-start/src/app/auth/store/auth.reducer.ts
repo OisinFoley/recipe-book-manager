@@ -13,34 +13,34 @@ const initialState = {
   loading: false
 };
 
-export const authReducer = (
-    state = initialState,
-    action: AuthActions.AuthActionsType
-  ) => {
-    switch (action.type) {
-      case AuthActions.AUTHENTICATE_SUCCESS:
-        const user = new User(
-          action.payload.email,
-          action.payload.userId,
-          action.payload.token,
-          action.payload.tokenExpirationDate
-        );
-        return {
-          ...state,
-          authError: null,
-          loading: false,
-          user
-        };
-      case AuthActions.AUTHENTICATE_FAIL:
-        return { ...state, authError: action.payload, loading: false };
-      case AuthActions.LOGIN_START:
-      case AuthActions.SIGNUP_START:
-        return { ...state, authError: null, loading: true };
-      case AuthActions.LOGOUT:
-        return { ...state, user: null };
-      case AuthActions.CLEAR_ERROR:
-        return { ...state, authError: null };
-      default:
-        return state;
-    }
-};
+export function authReducer (
+  state = initialState,
+  action: AuthActions.AuthActionsType
+) {
+  switch (action.type) {
+    case AuthActions.AUTHENTICATE_SUCCESS:
+      const user = new User(
+        action.payload.email,
+        action.payload.userId,
+        action.payload.token,
+        action.payload.tokenExpirationDate
+      );
+      return {
+        ...state,
+        authError: null,
+        loading: false,
+        user
+      };
+    case AuthActions.AUTHENTICATE_FAIL:
+      return { ...state, authError: action.payload, loading: false };
+    case AuthActions.LOGIN_START:
+    case AuthActions.SIGNUP_START:
+      return { ...state, authError: null, loading: true };
+    case AuthActions.LOGOUT:
+      return { ...state, user: null };
+    case AuthActions.CLEAR_ERROR:
+      return { ...state, authError: null };
+    default:
+      return state;
+  }
+}
