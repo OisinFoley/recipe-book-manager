@@ -11,9 +11,9 @@ const initialState: State = {
   recipes: []
 };
 
-export const recipeReducer = (
+export function recipeReducer (
   state = initialState, action: RecipeActions.RecipeActionTypes
-) => {
+) {
   switch (action.type) {
     case RecipeActions.SET_RECIPES:
       return {
@@ -51,4 +51,4 @@ export const recipeReducer = (
     default:
       return state;
   }
-};
+}
