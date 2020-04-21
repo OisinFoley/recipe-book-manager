@@ -4,7 +4,9 @@ export const LOGIN_START = '[Auth] LOGIN_START';
 export const AUTHENTICATE_SUCCESS = '[Auth] LOGIN';
 export const AUTHENTICATE_FAIL = '[Auth] LOGIN_FAIL';
 export const SIGNUP_START = '[Auth] SIGNUP_START';
+export const AUTO_LOGIN = '[Auth] AUTO_LOGIN';
 export const LOGOUT = '[Auth] LOGOUT';
+export const CLEAR_ERROR = '[Auth] CLEAR_ERROR';
 
 export class AuthenticateSuccess implements Action {
   readonly type = AUTHENTICATE_SUCCESS;
@@ -15,6 +17,7 @@ export class AuthenticateSuccess implements Action {
       userId: string;
       token: string;
       tokenExpirationDate: Date;
+      redirect: boolean;
     }
   ) {}
 }
@@ -22,10 +25,6 @@ export class AuthenticateSuccess implements Action {
 export class AuthenticateFail implements Action {
   readonly type = AUTHENTICATE_FAIL;
   constructor(public payload: string) {}
-}
-
-export class Logout implements Action {
-  readonly type = LOGOUT;
 }
 
 export class LoginStart implements Action {
@@ -48,9 +47,23 @@ export class SignupStart implements Action {
   ) {}
 }
 
+export class Logout implements Action {
+  readonly type = LOGOUT;
+}
+
+export class AutoLogin implements Action {
+  readonly type = AUTO_LOGIN;
+}
+
+export class ClearError implements Action {
+  readonly type = CLEAR_ERROR;
+}
+
 export type AuthActionsType
   = AuthenticateSuccess
   | AuthenticateFail
   | Logout
   | LoginStart
-  | SignupStart;
+  | SignupStart
+  | AutoLogin
+  | ClearError;

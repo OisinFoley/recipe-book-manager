@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Recipe } from '../recipe.model';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { RecipeService } from '../recipe.service';
+import { Store } from '@ngrx/store';
+import { map, switchMap } from 'rxjs/operators';
+
+import { Recipe } from '../recipe.model';
+import * as fromApp from '../../store/app.reducer';
+import * as RecipeActions from '../store/recipe.actions';
+import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -9,42 +14,48 @@ import { RecipeService } from '../recipe.service';
   styleUrls: ['./recipe-detail.component.css']
 })
 export class RecipeDetailComponent implements OnInit {
-  // @Input() recipe: Recipe;
   recipe: Recipe;
   id: number;
-  
+
   constructor(
-    private recipeService: RecipeService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private store: Store<fromApp.AppState>
   ) {}
 
   ngOnInit() {
     this.route.params
-      .subscribe(
-        (params: Params) => {
-          this.id = +params['id'];
-          this.recipe = this.recipeService.getRecipe(this.id);
-        }
-      );
+      .pipe(
+        map((params: Params) => {
+          return +params['id'];
+        }),
+        switchMap(id => {
+          this.id = id;
+          return this.store.select('recipes');
+        }),
+        map(recipeState => {
+          return recipeState.recipes.find((recipe, i) => {
+            return i === this.id;
+          });
+        })
+      )
+      .subscribe(recipe => {
+        this.recipe = recipe;
+      });
   }
 
   onEditRecipe() {
     this.router.navigate(['edit'], { relativeTo: this.route });
-
-    // just an example of how you would do more complex navigation, if you needed to
-    // in the non-commented line above, we're already on '/recipes/id'
-    // this.router.navigate(['../', this.id, 'edit'], { relativeTo: this.route });
   }
 
   onAddToShoppingList() {
-    this.recipeService.addIngredientsToShoppingList(this.recipe.ingredients);
+    this.store.dispatch(
+      new ShoppingListActions.AddIngredients(this.recipe.ingredients)
+    );
   }
 
   onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id);
-    this.router.navigate(['/recipes'])
+    this.store.dispatch(new RecipeActions.DeleteRecipe(this.id));
+    this.router.navigate(['/recipes']);
   }
 }
-// commented code redundant once we implemented routing, but can serve as a reference of a 
-// non-routing way to handle navigation and conditional displaying of components
