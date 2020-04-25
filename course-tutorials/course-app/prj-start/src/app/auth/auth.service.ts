@@ -8,13 +8,19 @@ import * as fromApp from '../store/app.reducer';
   providedIn: 'root'
 })
 export class AuthService {
-  private tokenExpirationTimer: any;
+  private _tokenExpirationTimer: NodeJS.Timeout;
+  get tokenExpirationTimer(): NodeJS.Timeout {
+    return this._tokenExpirationTimer;
+  }
+  set tokenExpirationTimer(e: NodeJS.Timeout) {
+    this._tokenExpirationTimer = e;
+  }
 
   constructor(private store: Store<fromApp.AppState>) {}
 
   setLogoutTimer(expirationDuration: number) {
     this.tokenExpirationTimer = setTimeout(() => {
-      this.store.dispatch(new AuthActions.Logout());
+      this.store.dispatch(new AuthActions.Logout(true));
     }, expirationDuration);
   }
 

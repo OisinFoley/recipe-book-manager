@@ -30,9 +30,9 @@ export class RecipesResolverService implements Resolve<Recipe[]> {
             ofType(RecipesActions.SET_RECIPES),
             take(1)
           );
-        } else {
-          return of(recipes);
         }
+
+        return of(recipes);
       })
     );
   }

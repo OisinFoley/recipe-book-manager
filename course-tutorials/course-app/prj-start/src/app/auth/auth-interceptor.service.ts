@@ -13,10 +13,10 @@ export class AuthInterceptorService implements HttpInterceptor {
     /*
       'take' combined with 'pipe' allows you to extract the first 'n' emitted values
         then immediately unsubscribe from future updates
-      'exhaustMap' allows you to take an observable (authService.user) and return something else
-        (what's returned from the exhaustMap function)
+      'exhaustMap' allows you to take an observable (authState.user) and return something else
+        (i.e. - whatever we return from the exhaustMap function itself)
         even though you had a return statement directly in front of your initial observable
-        (return this.authService....)
+        (in the following snippet, our initial observable refers to this.store.select('auth'))
       In this code snippet, we observe the authenticated user, grabbing its current value immediately
         we add params to it, and return the updated request
         because we used 'take', we unsubscribed as soon as we extracted the value,

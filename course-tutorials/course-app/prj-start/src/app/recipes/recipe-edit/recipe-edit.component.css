@@ -2,3 +2,15 @@ input.ng-invalid.ng-touched,
 textarea.ng-invalid.ngtouched {
   border: 1px solid red;
 }
+
+#ingredient-interacton-container {
+  margin-top: 10px;
+}
+
+.container-spacing {
+  padding: 0 10px 10px 10px;
+}
+
+#recipeForm {
+  height: 75vh;
+}

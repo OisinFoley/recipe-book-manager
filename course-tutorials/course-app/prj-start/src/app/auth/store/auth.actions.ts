@@ -49,6 +49,7 @@ export class SignupStart implements Action {
 
 export class Logout implements Action {
   readonly type = LOGOUT;
+  constructor(public isAutoLogout?: boolean) {}
 }
 
 export class AutoLogin implements Action {

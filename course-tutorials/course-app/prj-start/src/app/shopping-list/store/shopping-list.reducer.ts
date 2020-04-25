@@ -7,11 +7,17 @@ export interface State {
   editedIngredientIndex: number;
 }
 
-const initialState: State = {
-  ingredients: [
+function getInitialIngredients(): Ingredient[] {
+  const ingredientsFromStorage = JSON.parse(localStorage.getItem('shoppingList'));
+  const seedData = [
     new Ingredient('Apples', 40),
     new Ingredient('Banana', 20)
-  ],
+  ];
+  return ingredientsFromStorage ? ingredientsFromStorage : seedData;
+}
+
+const initialState: State = {
+  ingredients: getInitialIngredients(),
   editedIngredient: null,
   editedIngredientIndex: -1
 };

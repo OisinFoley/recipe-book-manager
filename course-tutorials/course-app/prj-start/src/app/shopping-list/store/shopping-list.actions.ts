@@ -8,6 +8,7 @@ export const UPDATE_INGREDIENT = '[Shopping List] UPDATE_INGREDIENT';
 export const DELETE_INGREDIENT = '[Shopping List] DELETE_INGREDIENT';
 export const START_EDIT = '[Shopping List] START_EDIT';
 export const STOP_EDIT = '[Shopping List] STOP_EDIT';
+export const ADD_INGREDIENTS_SUCCESS = '[Shopping List] ADD_INGREDIENTS_SUCCESS';
 
 export class AddIngredient implements Action {
   readonly type = ADD_INGREDIENT;
@@ -19,6 +20,10 @@ export class AddIngredients implements Action {
   constructor(public payload: Ingredient[]) {}
 }
 
+export class AddIngredientsSuccess implements Action {
+  readonly type = ADD_INGREDIENTS_SUCCESS;
+}
+
 export class UpdateIngredient implements Action {
   readonly type = UPDATE_INGREDIENT;
   constructor(public payload: Ingredient) {}
@@ -26,6 +31,7 @@ export class UpdateIngredient implements Action {
 
 export class DeleteIngredient implements Action {
   readonly type = DELETE_INGREDIENT;
+  constructor(public payload?: null) {}
 }
 
 export class StartEdit implements Action {
