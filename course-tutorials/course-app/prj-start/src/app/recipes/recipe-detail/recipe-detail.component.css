@@ -1,0 +1,11 @@
+#recipe-img {
+  max-height: 300px;
+}
+
+a.disabled {
+  cursor: not-allowed;
+}
+
+#recipe-ingredient-list {
+  height: 18vh;
+}

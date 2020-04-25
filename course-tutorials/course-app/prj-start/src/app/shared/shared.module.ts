@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { DropdownDirective } from './dropdown.directive';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner/loading-spinner.component';
-import { AlertComponent } from './alert/alert.component';
 import { PlaceholderDirective } from './placeholder/placeholder.directive';
+import { AlertNotificationComponent } from './alert/alert-notification/alert-notification.component';
 
 @NgModule({
   declarations: [
     DropdownDirective,
     LoadingSpinnerComponent,
-    AlertComponent,
+    AlertNotificationComponent,
     PlaceholderDirective
   ],
   imports: [
@@ -19,7 +19,6 @@ import { PlaceholderDirective } from './placeholder/placeholder.directive';
   exports: [
     DropdownDirective,
     LoadingSpinnerComponent,
-    AlertComponent,
     PlaceholderDirective,
     CommonModule
   ]

@@ -1,30 +1,23 @@
-<ng-template appPlaceholder></ng-template>
 <div class="row">
   <div class="col-xs-12 col-md-6 col-md-offset-3">
-    <!-- ng-template replaced this -->
-    <!-- <app-alert
-      [message]="error"
-      *ngIf="error"
-      (close)="onHandleError()">
-    </app-alert> -->
-    <div *ngIf="isLoading" style="text-align: center;">
+    <div *ngIf="isLoading" id="loading-spinner-wrapper">
       <app-loading-spinner></app-loading-spinner>
     </div>
     <form #authForm="ngForm" (ngSubmit)="onSubmit(authForm)" *ngIf="!isLoading">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{constants.emailLabel}}</label>
         <input
           type="email"
           id="email"
           class="form-control"
-          ngModel
+          [(ngModel)]="email"
           name="email"
           required
           email
         />
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{constants.passwordLabel}}</label>
         <input
           type="password"
           id="password"
@@ -37,23 +30,16 @@
       </div>
       <div>
         <button
-          class="btn btn-primary"
+          class="btn btn-primary btn-dimensions"
           type="submit"
           [disabled]="!authForm.valid"
         >
-          {{ isLoginMode ? 'Login' : 'Signup' }}
+          {{ isLoginMode ? constants.loginLabel : constants.signupLabel }}
         </button>
-        <button class="btn btn-primary" (click)="onSwitchMode()" type="button">
-          Switch to {{ isLoginMode ? 'Signup' : 'Login' }}
+        <span class="empty-spacing"></span>
+        <button class="btn btn-primary btn-dimensions" (click)="onSwitchMode()" type="button">
+          Switch to {{ isLoginMode ? constants.signupLabel : constants.loginLabel }}
         </button>
-
-        <!-- <button class="btn btn-primary" (click)="onRegister()" type="button">
-          try to register cognito
-        </button> -->
-
-        <!-- <button class="btn btn-primary" (click)="onLogin()" type="button">
-          try to login cognito
-        </button> -->
       </div>
     </form>
   </div>

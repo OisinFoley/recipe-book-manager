@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from '../auth/auth-guard';
-import { RecipeStartComponent } from './recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipesResolverService } from './recipe-resolver.service';
@@ -14,11 +13,9 @@ const routes: Routes = [
     component: RecipesComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: RecipeStartComponent },
       { path: 'new', component: RecipeEditComponent },
       // it's important to put the '/new' route before ':id',
-      // because how is angular meant to know whether you are saying
-      // interpret this as 'new', or some dynamic ':id'
+      // otherwise Angular will interpret '/new' as a dynamic id being fed into the /:id route
       { path: ':id', component: RecipeDetailComponent, resolve: [RecipesResolverService] },
       { path: ':id/edit', component: RecipeEditComponent, resolve: [RecipesResolverService] }
     ]

@@ -6,11 +6,13 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import * as AuthActions from './auth.actions';
-import { environment as env } from '../../../environments/environment';
+import { Constants } from '../../shared/constants';
 import { AuthResponse } from '../interfaces/auth-response';
 import { User } from '../user/user.model';
 import { UserData } from 'src/app/interfaces/user-data';
 import { AuthService } from '../auth.service';
+import { Alert } from 'src/app/shared/alert/alert.enum';
+import { AlertRequestRelayService } from 'src/app/shared/alert/alert-request-relay.service';
 
 const handleAuthentication = (
     expiresIn: number,
@@ -34,19 +36,18 @@ const handleAuthentication = (
 
 const handleError = (errorResponse: any) => {
   let errorMessage = 'An unknown error occurred';
-  // TODO: this is a firebase specific payload and should be updated when moving to Cognito
   if (!errorResponse.error || !errorResponse.error.error) {
     return of(new AuthActions.AuthenticateFail(errorMessage));
   }
   switch (errorResponse.error.error.message) {
     case 'EMAIL_EXISTS':
-      errorMessage = 'This email already exists';
+      errorMessage = Constants.emailAlreadyExistsLabel;
       break;
     case 'EMAIL_NOT_FOUND':
-      errorMessage = 'This email does not exist';
+      errorMessage = Constants.emailNotFoundLabel;
       break;
     case 'INVALID_PASSWORD':
-      errorMessage = 'This password is not correct';
+      errorMessage = Constants.passwordIncorrectLabel;
       break;
   }
   return of(new AuthActions.AuthenticateFail(errorMessage));
@@ -58,7 +59,8 @@ export class AuthEffects {
     private actions$: Actions,
     private http: HttpClient,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private alertRequestRelayService: AlertRequestRelayService
   ) {}
 
   @Effect()
@@ -67,7 +69,7 @@ export class AuthEffects {
     switchMap((signupAction: AuthActions.SignupStart) => {
       return this.http
         .post<AuthResponse>(
-          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${env.firebaseKey}`,
+          Constants.firebaseSignUpUrl,
           {
             email: signupAction.payload.email,
             password: signupAction.payload.password,
@@ -103,9 +105,20 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
+  authFailAlertTrigger = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_FAIL),
+    tap((authFailAction: AuthActions.AuthenticateFail) => {
+      this._emitMsgToAlertServiceRelay(authFailAction.payload);
+    })
+  );
+
+  @Effect({ dispatch: false })
   authLogout = this.actions$.pipe(
     ofType(AuthActions.LOGOUT),
-    tap(() => {
+    tap((logoutAction: AuthActions.Logout) => {
+      if (logoutAction.isAutoLogout) {
+        this._fireAutoLogoutAlert();
+      }
       this.authService.clearLogoutTimer();
       localStorage.removeItem('userData');
       this.router.navigate(['/auth']);
@@ -118,7 +131,7 @@ export class AuthEffects {
     switchMap((authData: AuthActions.LoginStart) => {
       return this.http
         .post<AuthResponse>(
-          `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${env.firebaseKey}`,
+          Constants.firebaseSignInUrl,
           {
             email: authData.payload.email,
             password: authData.payload.password,
@@ -160,7 +173,6 @@ export class AuthEffects {
       );
 
       if (loadedUser.token) {
-        // TODO: can we export this expression to a util - DRY
         const expirationDate =
           new Date(userData.tokenExpirationDate).getTime() -
           new Date().getTime();
@@ -171,4 +183,18 @@ export class AuthEffects {
       return { type: 'DUMMY' };
     })
   );
+
+  private _fireAutoLogoutAlert = () => {
+    this.alertRequestRelayService.relayNewAlertRequest({
+      text: Constants.authenticationTokenTimeoutLabel,
+      type: Alert.info
+    });
+  }
+
+  private _emitMsgToAlertServiceRelay = (alertText: string) => {
+    this.alertRequestRelayService.relayNewAlertRequest({
+      text: alertText,
+      type: Alert.danger
+    });
+  }
 }

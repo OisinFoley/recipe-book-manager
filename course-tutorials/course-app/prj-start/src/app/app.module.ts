@@ -5,17 +5,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import * as fromApp from './store/app.reducer';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AppRoutingModule } from './app-routing.module';
-import { AlertComponent } from './shared/alert/alert.component';
 import { SharedModule } from './shared/shared.module';
 import { CoreModule } from './core.module';
-import * as fromApp from './store/app.reducer';
 import { AuthEffects } from './auth/store/auth.effects';
 import { environment } from 'src/environments/environment';
 import { RecipeEffects } from './recipes/store/recipe.effects';
+import { ShoppingListEffects } from './shopping-list/store/shopping-list.effects';
+import { AlertNotificationComponent } from './shared/alert/alert-notification/alert-notification.component';
 
 @NgModule({
   declarations: [
@@ -24,17 +26,18 @@ import { RecipeEffects } from './recipes/store/recipe.effects';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
+    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects, RecipeEffects]),
+    EffectsModule.forRoot([AuthEffects, RecipeEffects, ShoppingListEffects]),
     StoreDevtoolsModule.instrument({ logOnly: environment.production }),
     AppRoutingModule,
     SharedModule,
     CoreModule
   ],
   bootstrap: [AppComponent],
-  entryComponents: [AlertComponent]
+  entryComponents: [AlertNotificationComponent]
 })
 export class AppModule { }

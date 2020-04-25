@@ -8,6 +8,9 @@ export const ADD_RECIPE = '[Recipes] ADD_RECIPE';
 export const UPDATE_RECIPE = '[Recipes] UPDATE_RECIPE';
 export const DELETE_RECIPE = '[Recipes] DELETE_RECIPE';
 export const STORE_RECIPES = '[Recipes] STORE_RECIPES';
+export const STORE_RECIPES_SUCCESS = '[Recipes] STORE_RECIPES_SUCCESS';
+export const STORE_RECIPES_FAIL = '[Recipes] STORE_RECIPES_FAIL';
+export const LOADING = '[Recipes] LOADING';
 
 export class SetRecipes implements Action {
   readonly type = SET_RECIPES;
@@ -38,9 +41,22 @@ export class StoreRecipes implements Action {
   readonly type = STORE_RECIPES;
 }
 
+export class StoreRecipesSuccess implements Action {
+  readonly type = STORE_RECIPES_SUCCESS;
+}
+
+export class StoreRecipesFail implements Action {
+  readonly type = STORE_RECIPES_FAIL;
+}
+
+export class Loading implements Action {
+  readonly type = LOADING;
+}
+
 export type RecipeActionTypes
-  = SetRecipes
-  | AddRecipe
-  | UpdateRecipe
-  | DeleteRecipe
-  | StoreRecipes;
+= SetRecipes
+| AddRecipe
+| UpdateRecipe
+| DeleteRecipe
+| StoreRecipes
+  | Loading;
