@@ -7,18 +7,28 @@ import { Subscription } from 'rxjs';
 
 import * as fromApp from '../../store/app.reducer';
 import * as RecipesActions from '../store/recipe.actions';
+import { Constants } from '../../shared/constants';
+import { recipeEditTrigger } from 'src/app/shared/animation-triggers';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
-  styleUrls: ['./recipe-edit.component.css']
+  styleUrls: ['./recipe-edit.component.css'],
+  animations: [recipeEditTrigger]
 })
 export class RecipeEditComponent implements OnInit, OnDestroy {
-  id: number;
-  editMode = false;
+  private _id: number;
+  private _editMode = false;
+  private _storeSub: Subscription;
   recipeForm: FormGroup;
-  private storeSub: Subscription;
+  constants = Constants;
 
+  get id(): number { return this._id; }
+  set id(e: number) { this._id = e; }
+  get editMode(): boolean { return this._editMode; }
+  set editMode(e: boolean) { this._editMode = e; }
+  get storeSub(): Subscription { return this._storeSub; }
+  set storeSub(e: Subscription) { this._storeSub = e; }
   get controls() {
     return (<FormArray>this.recipeForm.get('ingredients')).controls;
   }
@@ -27,7 +37,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private store: Store<fromApp.AppState>
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.route.params
@@ -35,7 +45,6 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
         (params: Params) => {
           this.id = +params['id'];
           this.editMode = params['id'] != null;
-          console.log(this.editMode);
           this.initForm();
         }
       );
@@ -51,7 +60,7 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
     )
     : this.store.dispatch(new RecipesActions.AddRecipe(this.recipeForm.value));
 
-    this.onCancel();
+    this.onCloseRecipe();
   }
 
   onAddIngredient() {
@@ -104,13 +113,13 @@ export class RecipeEditComponent implements OnInit, OnDestroy {
 
     this.recipeForm = new FormGroup({
       'name': new FormControl(recipeName, Validators.required),
-      'imagePath': new FormControl(recipeImagePath, Validators.required),
-      'description': new FormControl(recipeDescription, Validators.required),
+      'imagePath': new FormControl(recipeImagePath),
+      'description': new FormControl(recipeDescription),
       'ingredients': recipeIngredients
     });
   }
 
-  onCancel() {
+  onCloseRecipe() {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 

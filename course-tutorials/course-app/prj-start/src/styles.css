@@ -1,1 +1,55 @@
-/* You can add global styles to this file, and also import other style files ... */
+@font-face {
+  font-family: raleway;
+  src: url(assets/font/Raleway-Regular.ttf) format("opentype");
+}
+
+* {
+  font-family: 'raleway', 'arial', sans-serif;
+}
+
+.empty-spacing {
+  margin: 0 5px;
+  visibility: hidden;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.btn-dimensions {
+  min-width: 130px;
+  min-height: 35px;
+}
+
+#Scrollbar
+
+/*the track is what the thumb is held inside,
+  this controls rendering of the scrollbar-track*/
+.scrollbar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  margin-bottom: 0.7vh;
+  margin-top: 1.7vh;
+  background: lavender;
+}
+
+/*the thumb is the vertically moving part of scrollbar,
+  which this controls the display of*/
+.scrollbar::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: #E9ECF5;
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar {
+  overflow-y: scroll;
+  overflow-x: hidden; 
+}

@@ -7,11 +7,4 @@ export class User implements UserData {
     public token: string,
     public tokenExpirationDate: Date
   ) {}
-
-  // get token() {
-  //   if (!this.tokenExpirationDate || new Date() > this.tokenExpirationDate) {
-  //     return null;
-  //   }
-  //   return this.token;
-  // }
 }

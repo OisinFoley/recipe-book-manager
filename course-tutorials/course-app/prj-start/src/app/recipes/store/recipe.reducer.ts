@@ -1,14 +1,14 @@
-import { Action } from '@ngrx/store';
-
 import { Recipe } from '../recipe.model';
 import * as RecipeActions from './recipe.actions';
 
 export interface State {
   recipes: Recipe[];
+  loading: boolean;
 }
 
 const initialState: State = {
-  recipes: []
+  recipes: [],
+  loading: false
 };
 
 export function recipeReducer (
@@ -18,7 +18,13 @@ export function recipeReducer (
     case RecipeActions.SET_RECIPES:
       return {
         ...state,
+        loading: false,
         recipes: [...action.payload]
+      };
+    case RecipeActions.LOADING:
+      return {
+        ...state,
+        loading: true
       };
     case RecipeActions.ADD_RECIPE:
       return {
