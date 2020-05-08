@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-xs-12">
+    <button class="btn btn-success btn-dimensions" id="new-recipe-btn"
+      (click)="onNewRecipe()">{{constants.newRecipeLabel}}</button>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-xs-12 scrollbar" id="recipe-list-container">
+    <div *ngIf="recipes.length === 0">
+      <div class="alert alert-info">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span
+          id="empty-recipes-suggestion-label"
+          title="{{constants.emptyRecipesSuggestionLabel}}">
+          {{constants.emptyRecipesSuggestionLabel}}
+        </span>
+      </div>
+    </div>
+    <div
+      [@.disabled]="disableListFadeOut"
+      *ngFor="let recipeEl of recipes;
+      let i = index;
+      first as isFirst"
+      [class.mt-15]="!isFirst"
+      @component-fade-out>
+        <app-recipe-item
+          [recipe]="recipeEl"
+          [index]="i">
+        </app-recipe-item>
+    </div>
+  </div>
+</div>

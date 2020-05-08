@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="row container-spacing">
+      <div class="col-xs-12">
+        <button
+          type="submit"
+          title="{{ !recipeForm.valid ? constants.recipeEditInvalidFormLabel : '' }}"
+          class="btn btn-success btn-dimensions"
+          id="save-recipe-btn"
+          form="recipe-form"
+          [disabled]="!recipeForm.valid">{{constants.saveChangesLabel}}</button>
+        <span class="empty-spacing"></span>
+        <button
+          type="button"
+          id="close-recipe-btn"
+          class="btn btn-danger btn-dimensions"
+          (click)="onCloseRecipe()">{{constants.closeRecipeLabel}}</button>
+      </div>
+    </div>
+    <form
+      [formGroup]="recipeForm"
+      id="recipe-form"
+      (ngSubmit)="onSubmit()"
+      class="container-spacing scrollbar">
+      <div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="name"> {{constants.nameLabel}}</label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="image-path">{{constants.imageUrlLabel}}</label>
+              <input
+                title="Stock image used if none provided"
+                type="text"
+                id="image-path"
+                formControlName="imagePath"
+                #imagePath
+                class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <img [src]="imagePath.value" class="img-responsive">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label class="vertical-label-spacing" for="description">{{constants.descriptionLabel}}</label>
+              <textarea
+                type="text"
+                id="description"
+                formControlName="description"
+                class="form-control"
+                rows="6">
+              </textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-xs-12"
+            id="ingredient-interacton-container"
+            formArrayName="ingredients">
+            <div
+              class="row"
+              *ngFor="let ingredientCtrl of controls; let i = index"
+              [@recipe-edit]
+              [formGroupName]="i">
+              <div class="col-xs-9">
+                <input
+                  type="text"
+                  id="{{ 'ingredient-name-' + i}}"
+                  class="form-control"
+                  formControlName="name">
+              </div>
+              <div class="col-xs-2">
+                <input
+                  type="number"
+                  id="{{ 'ingredient-amount-' + i}}"
+                  class="form-control"
+                  formControlName="amount">
+              </div>
+              <div class="col-xs-1">
+                <button
+                  type="button"
+                  id="{{ 'delete-ingredient-btn-' + i}}"
+                  class="btn btn-danger"
+                  (click)="onDeleteIngredient(i)">X</button>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-xs-12">
+                <button
+                  type="button"
+                  id="add-ingredient-btn"
+                  class="btn btn-success btn-dimensions"
+                  (click)="onAddIngredient()">
+                    {{constants.addIngredientLabel}}
+                </button>
+                <span class="empty-spacing"></span>
+                <button
+                  type="button"
+                  id="delete-all-ingredients-btn"
+                  class="btn btn-warning btn-dimensions"
+                  (click)="onDeleteAllIngredients()">
+                    {{constants.deleteAllIngredientsLabel}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form (ngSubmit)="onSubmit(form)" #form="ngForm">
+      <div class="row">
+        <div class="col-sm-5 form-group">
+          <label for="name">{{constants.nameLabel}}</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            name="name"
+            ngModel
+            required>
+        </div>
+        <div class="col-sm-2 form-group">
+          <label for="amount">{{constants.amountLabel}}</label>
+          <input
+            type="number"
+            id="amount"
+            name="amount"
+            ngModel
+            required
+            class="form-control"
+            pattern="^[1-9]+[0-9]*$">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            class="btn btn-success btn-dimensions"
+            type="submit"
+            [disabled]="!form.valid"
+            title="{{ !form.valid ? constants.setShoppingListItemSuggestionLabel : ''}}">
+              {{ isEditMode ? constants.updateLabel : constants.addLabel }}
+          </button>
+          <span class="empty-spacing"></span>
+          <button
+            class="btn btn-danger btn-dimensions"
+            type="button"
+            id="delete-shopping-item-btn"
+            (click)="onDelete()"
+            [disabled]="!isEditMode"
+            title="{{ !isEditMode ? constants.deleteShoppingListItemSuggestionLabel : ''}}">
+              {{constants.deleteLabel}}
+          </button>
+          <span class="empty-spacing"></span>
+          <button
+            class="btn btn-primary btn-dimensions"
+            type="button"
+            id="clear-shopping-item-selection-btn"
+            (click)="onClear()"
+            [disabled]="!isEditMode"
+            title="{{ !isEditMode ? constants.selectionAlreadyClearLabel : ''}}">
+              {{constants.clearSelectionLabel}}
+            </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
