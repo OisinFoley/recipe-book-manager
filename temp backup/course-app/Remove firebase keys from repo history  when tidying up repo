@@ -1,5 +1,0 @@
-**
-THIS CAN ALL BE IGNORED IF WE MANAGE TO SWITCH FROM FIREBASE TO AWS BEFORE APPLYING FOR JOBS
-**
-
-The repo which will be public and hve 2 branches (1 w/ NgRx and 1 w/o), needs to have as many commits as possible squashed, so that the key isn't revealed in the component file where I hard-coded the key)
