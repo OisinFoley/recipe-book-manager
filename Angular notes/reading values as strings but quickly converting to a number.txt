@@ -1,6 +1,0 @@
-if reading a numeric value as a string,
-or if calling this.ActivatedRoute.snapshot.params['something'] (which will return a string),
-
-then you can put a plus in front of the statement in order to parse it as a number, like so:
-
-const id  = +this.route.snapshot.params['id']
