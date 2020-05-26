@@ -1,0 +1,22 @@
+#recipe-item-img {
+  max-height: 50px;
+}
+
+#recipe-list-item.active {
+  border-color: transparent;
+  background-color: #f5b911;
+  color: #333;
+}
+
+#recipe-list-item {
+  background-color: #f5d911;
+}
+
+#recipe-name,
+#recipe-description {
+  color: #333;
+}
+
+#recipe-item-text-wrapper {
+  width: 80%;
+}

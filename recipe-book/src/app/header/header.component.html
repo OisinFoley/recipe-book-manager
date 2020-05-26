@@ -1,0 +1,48 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" (click)="collapsed = !collapsed">
+          <span class="icon-bar" *ngFor="let iconBar of [1, 2, 3]"></span>
+        </button>
+        <a routerLink="/" id="main-logo" class="navbar-brand navbar-item">{{constants.recipeBookLabel}}</a>
+      </div>
+    <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
+      <ul class="nav navbar-nav">
+        <li routerLinkActive="active">
+          <a class="navbar-item" routerLink="/recipes" *ngIf="isAuthenticated">{{constants.recipesLabel}}</a>
+        </li>
+        <li routerLinkActive="active">
+          <a class="navbar-item" routerLink="/auth" *ngIf="!isAuthenticated">{{constants.authenticateLabel}}</a>
+        </li>
+        <li routerLinkActive="active">
+          <a class="navbar-item" routerLink="/shopping-list">{{constants.shoppingListLabel}}</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right" id="authenticated-navbar-list">
+        <li *ngIf="isAuthenticated">
+          <a class="pointer-cursor navbar-item" id="logout-btn" (click)="onLogout()">
+            {{constants.logoutLabel}}
+          </a>
+        </li>
+        <li class="dropdown" id="data-access-request-dropdown" appDropdown *ngIf="isAuthenticated">
+          <a class="dropdown-toggle navbar-item" role="button">
+            {{constants.manageDataLabel}}
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="pointer-cursor navbar-item" id="save-recipes-btn" (click)="onSaveData()">
+                {{constants.saveRecipesLabel}}
+              </a>
+            </li>
+            <li>
+              <a class="pointer-cursor navbar-item" id="fetch-recipes-btn" (click)="onFetchData()">
+                {{constants.fetchRecipesLabel}}
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
