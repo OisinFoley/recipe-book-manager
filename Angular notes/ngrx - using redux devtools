@@ -1,0 +1,14 @@
+install @ngrx/store-devtools
+
+in your app module's import statements, add this line:
+
+// import your environment file (not env.production)
+StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+
+What this says is:
+- when you're running in production, the CLI will copy the content of env.production into the regular env file.
+- if the env file's production property is true, then only show logs
+- I haven't booted the app in both dev and production in order to see the difference, but that's the general premise accoriding to Max
+
+(TODO: check out the difference in the extension's output when running in dev vs production)
+

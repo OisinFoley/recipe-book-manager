@@ -1,0 +1,59 @@
+Let's say we're dynamically rendering a component - like an AlertComponent - which has an @Output() prop which returns an EventEmitter.
+
+We learned in more basic sections of Angular that we should only use @Output when a parent component will subscribe to the Output.
+
+Because we're calling this AlertComponent dynamically, we obviously have no way to access the EvenEmitter's Output in a HTML way, because we never explicitly call the AlertComponent anywhere in our HTML.
+
+We should also remember that if we're going to subscribe to an Observable (which EventEmitter is), then we should use a Subject or BehaviorSubject instead.
+
+We have 1 exception to this rule when using dynamic programmatuc components.
+In the component which sets up and renders the dynamic component, we can subscribe to the EventEmitter value, then in the subscribe callback, we can perform whatever action we would if we had called the component explcitly in our HTML and were responding to the EventEmitter Output.
+
+As an aside:
+Something which is not always the case, but is pertinent to the AlertComponent example (the AlertComponent is a modal), the AlertComponent's Output is a close button click event.
+This means we want to close the AlertComponent.
+In the callback of the EventEmitter which we subscribed to, we can actually immediately unsubscribe, as well call clear() on the hostContainer (we saw in the "Dynamic component programatically (not *ngIf)" file that this is a good practice, in case a larger application has a scenario where multiple different components could be swapped in and out of a single components <ng-template> element
+
+Component 1
+private showErrorAlert(errorResponse: string) {
+    const alertCmpFactory = this.componentFactoryResolver.resolveComponentFactory(
+      AlertComponent
+    );
+
+    const hostViewContainer = this.alertHost.viewContainerRef;
+    // destroys anything that may have been embedded earlier in the dynamic component container
+    hostViewContainer.clear();
+
+    const componentRef = hostViewContainer.createComponent(alertCmpFactory);
+
+** SETTING COMPONENT'S MESSAGE AND SUBSCRIBING (AND THEN UNSUBSCRIBING) TO ITS OUTPUT**
+    componentRef.instance.message = errorResponse;
+    this.closeSub = componentRef.instance.close.subscribe(() => {
+      this.closeSub.unsubscribe();
+      hostViewContainer.clear();
+    });
+
+  }
+
+
+
+Component 2
+
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-alert',
+  templateUrl: './alert.component.html',
+  styleUrls: ['./alert.component.css']
+})
+export class AlertComponent {
+  @Input() message: string;
+  @Output() close = new EventEmitter<void>();
+
+  constructor() { }
+
+  onClose() {
+    this.close.emit();
+  }
+}
+

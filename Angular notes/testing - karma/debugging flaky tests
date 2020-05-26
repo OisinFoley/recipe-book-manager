@@ -1,0 +1,23 @@
+Remember that tests run randomly, so intermittent fails can be caused by a few things:
+
+- Does test work when run by itself? - If yes, then configuration from another test is likely messing with the failing test
+	- Did you remember to do any necessary cleanup in test before?
+	- Did you define an 'initialState' or something similiar
+	    in the test before the one which is failing, but then
+	    forget to define the state in the failing test
+	    (or better still, define the initial state in beforeEach)
+An example of where I encountered this is in the recipe reducer spec
+When testing the 'loading' describe, I had not set the initial state in the test.
+This means that if the test ran immediately after the set recipes test, then it would pass, otherwise it would get an undefined error for the initial state
+
+- Did you copy the contents from a test when creating a new one?
+If so, you may be mocking the incorrect function in your failing test, the tricky thing is that tests can still sometimes pass despite your mistake.
+An example of where I encountered this was the auth effects spec.
+I copied the contents of an AuthLogout test into a new test I created for AutoLogin.
+This means that in my new AutoLogin test, I erronously had an assertion on a spy on localStorage.removeItem (copied from AuthLogout test), but my test (and the spy I created earlier in the test) was calling localStorage.getItem.
+This can be easy to miss when you have tired eyes, and the fact that the test will still pass regardless of the mistake can be misleading.
+
+- Check the browser console when all tests have complete and you have some failures.
+The errors there may be more useful than those given in the test suite DOM
+
+- Remember you can put breakpoints on a spec file in the browser, so if you're really stuck, you can alays go line-by-line over the test and the payload as itpassed through different test props

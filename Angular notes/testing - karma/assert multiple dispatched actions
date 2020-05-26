@@ -1,0 +1,18 @@
+expect(storeMock.dispatch).toHaveBeenCalledWith(
+  new RecipeActions.FetchRecipes()
+);
+expect(storeMock.dispatch).toHaveBeenCalledWith(
+  new RecipeActions.Loading()
+);
+
+
+To check the order in which the dispatch calls were made, try the following:
+
+const allCalls = storeMock.dispatch.calls.all();
+console.log(JSON.stringify(allCalls));
+
+const firstCall = allCalls[0].args;
+const secondCall = allCalls[1].args;
+
+expect(firstCall).toEqual([new RecipeActions.Loading()]);
+expect(secondCall).toEqual([new RecipeActions.FetchRecipes()]);

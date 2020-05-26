@@ -1,0 +1,65 @@
+Requirements:
+
+- Define store state type: when defining the store variable outside of the beforeEach block, you need to give it the AppState type (e.g. - fromApp.AppState)
+
+the reason for this is that y=if you just pass in the type of specific component's state (e.g. - ShoppingListState), then any updates to the store during the test won't be caught properly in your component
+
+this is because your test is using state of type: ComponentStateType while your actual component has state of type: AppState.ComponentStateType
+
+e.g.
+this will work: let store: MockStore<fromApp.AppState>;
+this will not work: let store: MockStore<ShoppingListState>; 
+
+- Define beforeEach block - we define our state type, and our beforeEach block should look like this:
+
+beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [FormsModule],
+        declarations: [
+          ShoppingEditComponent
+        ],
+        providers: [
+          provideMockStore({ initialState: { shoppingList: initialState } })
+        ]
+      });
+      store = TestBed.get<Store<State>>(Store);
+    });
+
+- Run the test 
+
+it('should have \'editMode = true\' and form values should be set to name and amount of the selected ingredient',
+      fakeAsync(() => {
+        const fixture = TestBed.createComponent(ShoppingEditComponent);
+        tick(1000);
+        fixture.detectChanges();
+
+// we have to wait (via tick()) and detectchanges after each notable event -> here, they are loading the component, and updating the store
+
+        const componentInstance = fixture.componentInstance;
+        fixture.whenStable().then(() => {
+
+// auth and recipes are not relevant to the component under test, but are part of the AppState type we provided when defining our store variable in the first step
+
+          store.setState({
+            shoppingList: {
+              ...shoppingListState,
+            },
+            auth: {
+              user: null,
+              authError: '',
+              loading: false
+            },
+            recipes: {
+              recipes: [],
+              loading: false
+            }
+          });
+
+        });
+
+        tick(1000);
+        fixture.detectChanges();
+
+        expect(componentInstance['editMode']).toEqual(true);
+      })
+    );

@@ -1,0 +1,11 @@
+This is how you handle route navigation outside of templates when using NgRx.
+
+W/o NgRx, this would have been done in the component, inside the callback to some sort of behavior subject subscriber.
+
+  @Effect({ dispatch: false })
+  authSuccess = this.actions$.pipe(
+    ofType(AuthActions.LOGIN),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  );

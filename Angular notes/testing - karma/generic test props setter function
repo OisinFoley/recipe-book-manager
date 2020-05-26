@@ -1,0 +1,37 @@
+We can write a function that will set our:
+
+store,
+router,
+fixture,
+component 
+and componentHtmlElement
+
+for us, so that we don't have to write them line-by-line at the end of each beforeEach block.
+
+We just need to ensure it is generic.
+Below is how to do so:
+
+'Type' is imported from @angular/core;
+
+Arrow (note the <T> at beginning and end of next line):
+const setTestProps = <T>(TestBedSetup: TestBedStatic, componentClass: Type<T>) => {
+
+  const store = TestBedSetup.get<Store<fromApp.AppState>>(Store);
+  const router = TestBedSetup.get(Router);
+  *** NOTE THE <T> ON THIS LINE ***
+  const fixture = TestBedSetup.createComponent<T>(componentClass);
+  const component = fixture.componentInstance;
+  const componentHtmlElement = fixture.debugElement.nativeElement;
+
+  return {
+    store,
+    router,
+    fixture,
+    component,
+    componentHtmlElement
+  };
+
+}
+
+Non-arrow (note the <T> at beginning and end of next line):
+function setTestProps<T>(TestBedSetup: TestBedStatic, componentClass: Type<T>) {... the rest is the same }

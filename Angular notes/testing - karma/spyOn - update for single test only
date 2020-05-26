@@ -1,0 +1,14 @@
+- you may have defined a spy in a beforeEach block, like so:
+
+closeRecipeSpy = spyOn(component, 'onCloseRecipe');
+
+- if you want to redefine it at the beginning of a single test, you will get an error if you say closeRecipeSpy = spyOn(....) related to there already being a spy.
+
+Instead of redefining it, you just update the value, like so:
+
+closeRecipeSpy.and.callThrough();
+or
+closeRecipeSpy.and.returnValue();
+
+// you just make the call on the existing variable itself
+

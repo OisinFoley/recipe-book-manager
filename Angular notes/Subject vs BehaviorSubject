@@ -1,0 +1,7 @@
+The difference between the 2 is that a behavior subject can access a previously emitted value, even if the subject property is initialised after the thing that we're subscribing to has already emitted values.
+
+A regular subject can only subscribe to values emitted after the subject tself has been initialised.
+
+A good use of a behavior subject is if you were initialising a class that needs to access a token that we got when logging in (generally, we store a token value in a subject).
+With a regular subject, the initialised subject would not be able to access the token because its value was emitted before the subject was initialised.
+With behavior subject, no such issue exists.

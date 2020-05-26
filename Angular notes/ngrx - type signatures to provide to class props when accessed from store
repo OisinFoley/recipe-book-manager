@@ -1,0 +1,18 @@
+If pulling ingredients from the store, and setting a class prop using data within the callback,
+
+just define the ingredients type as ingredients: Ingredient[];
+
+This is to be used when accessing the store data like so:
+
+// in ngOnInit()
+this._subscription = this.store.select('shoppingList').subscribe(stateData => {
+      this.ingredients = stateData.ingredients;
+});
+
+
+If you're not accessing the subscribe() function's callback, then the Ingredients prop type would need to be defined like so:
+
+ingredients: Observable<{ ingredients: Ingredient[] }>;
+
+// in ngOnInit()
+this.ingredients = this.store.select('shoppingList')

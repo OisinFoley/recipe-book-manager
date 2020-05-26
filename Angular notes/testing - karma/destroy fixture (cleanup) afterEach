@@ -1,0 +1,20 @@
+- describe block should have a declaration, like so:
+
+let fixture:      ComponentFixture<ShoppingListComponent>;
+
+- beforeEach should have an assignment, like so:
+
+fixture = TestBed.createComponent(ShoppingListComponent);
+
+- afterEach should use either fo the following:
+
+	fixture.debugElement.nativeElement.remove();
+or
+	document.body.removeChild(element);
+
+
+Note: Some examples mention     "fixture.destroy();"
+It doesn't work for us, could be a versioning issue, but either way, avoid it...
+
+
+

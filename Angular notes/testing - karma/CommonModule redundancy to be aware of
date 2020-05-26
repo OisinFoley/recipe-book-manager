@@ -1,0 +1,3 @@
+Do not import CommonModule (responsible for ngIf and ngFor) into your tests if you're also importing either FormsModule or ReactiveFormsModule.
+
+Both of the form-related module have CommonModule defined as a peer dependency in their respective package.json files, hence we have access to those directives without explicitly importing CommonModule.

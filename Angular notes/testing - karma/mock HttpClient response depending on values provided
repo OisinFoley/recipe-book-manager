@@ -1,0 +1,44 @@
+HttpClient takes an address, and - if a Post/Put - a body payload.
+You may also specify an 'options' arg too, but the idea is the same as this example, which is just url and body.
+
+// http request in service or NgRx effect class
+return this.http
+.post<AuthResponse>(
+  Constants.firebaseSignInUrl,
+  {
+    email: authData.payload.email,
+    password: authData.payload.password,
+    returnSecureToken: true
+  }
+)
+
+// spy mock in spec file
+httpService.post
+      .withArgs(
+        Constants.firebaseSignInUrl, // the url
+        {
+          email: mockAuthPayloadValues.email,
+          password: mockAuthPayloadValues.password,
+          returnSecureToken: true
+        } // the payload as the service or effect sets it up
+      )
+      //* throwError is rxjs operator to trigger switchMap's catchError
+      .and.returnValue(
+        throwError(new MockAuthFail(emailNotFound))
+      );
+
+
+
+// some context: httpService is a spy defined in our beforeEach block, like so:
+
+providers:[
+provideMockActions(() => actions),
+ {
+   provide: HttpClient,
+   useValue: jasmine.createSpyObj('HttpClient', ['post'])
+ }
+]
+
+httpService = TestBed.get<HttpClient>(HttpClient);
+
+More info: https://stackoverflow.com/questions/16198353/any-way-to-modify-jasmine-spies-based-on-arguments

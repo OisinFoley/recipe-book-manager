@@ -1,0 +1,26 @@
+withLatestFrom is an rxjs operatir that you can use to take the latest value from an observable, and insert into your current observable.
+
+the first use we saw of it was when we called out STORE_RECIPES action, (where we had performed CRUDs on our recipes locally, but hadn't yet persisted any of those changes to the backend) and we needed to access the store's contents in order to make the request to the backend.
+
+when we used it in our recipes.effects.ts class, we were dispatching STORE_RECIPES, then used the usual ofType() function provided by ngrx/effects to act as a listener for that action.
+
+then, we used withLatestFrom, like described above, to get the latest recipes from the store, which includes whatever changes we've made since we last saved/updated from the backend.
+
+the thing to note is that we then used switchMap after withLatestFrom, as the next function in the chain.
+this left us with an array of params, the first index containing the data passed into ofType(), and the second being the data from withLatestFrom(), as we can see in the following example from the "storing recipes via effects video from Max's course (#383):
+
+@Effect({ dispatch: false })
+  storeRecipes = this.actions$.pipe(
+    // this provides actionData
+    ofType(RecipesActions.STORE_RECIPES),
+    // provides recipesState 
+    withLatestFrom(this.store.select('recipes')),
+    // these array destructured args come from the funcs earlier in the chain
+    switchMap(([actionData, recipesState]) => {
+      return this.http
+        .put(
+          'https://angular-course-app-e750b.firebaseio.com/recipes.json',
+          recipesState.recipes
+        );
+    })
+  );

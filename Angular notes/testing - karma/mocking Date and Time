@@ -1,0 +1,18 @@
+jasmine.clock().install();
+// put whatever valid arg you want, you can even use just 0 as the ctor arg.
+var baseTime = new Date(2013, 9, 23);
+jasmine.clock().mockDate(baseTime);
+
+// an example fo if you wanted time to elapse, but not compulsory when using
+jasmine.clock().tick(50)
+expect(new Date().getTime()).toEqual(baseTime.getTime() + 50);
+
+
+afterEach(function () {
+    jasmine.clock().uninstall();
+});
+
+As per: https://stackoverflow.com/questions/26152796/mock-date-constructor-with-jasmine
+
+
+To see in action, I used this when testing the "should dispatch AuthenticateSuccess action" auth.effect in the recipe-book project

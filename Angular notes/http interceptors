@@ -1,0 +1,45 @@
+most apps will make more than a single request
+
+many requests will share commonalities, namely all sending similar headers like Authorisation headers containing a token.
+
+an interceptors allows you attach or modify each request, meaning you can just specify a single place where your auth token will be added as a header, menaing individual requests become less bloated and cumbersome.
+
+in your interceptor class, you should always make sure to call "return alias.next()", so that the http request can continue its execution and actually be executed.
+it's not clear whether the interceptor is called before the rest of the http request is setup or if this happens after, but we can think of an interceptor as acting in a way in that it intercept the request as it's about to send the request
+
+to configure it properly, your app.module file needs to have the following added to its providers array:
+
+{
+	provide: HTTP_INTERCEPTORS //comes from @angular common http
+	useClass: interceptorServiceAlias
+	multi: true //if you want to use multiple interceptors, this ensures that one doesn't override the all
+}
+if using multiple interceptors in your project, then the order they're added to the .module file is the order they'll be called in (i.e. - FIFO/a queue)
+
+
+
+when modifying a request, they're actually immutable, so you must call a clone() method, like so:
+const modifiedRequest = req.clone({
+	headers: req.headers.append('name', 'oisin')
+})
+
+you can also use interceptors to modiy the response.
+full example below:
+
+class AuthInterceptorService implements HttpInterceptor
+
+intercept(req: HttpRequest<any>, next: HttpHandler) {
+	// some stuff where you clone the request in order to modify it (see above)
+
+	return next.handle(modifiedRequest).pipe(
+		tap(even => {
+			if (event.type === HttpEvenType.response) {
+				//do something
+			}
+		})
+	)
+}
+
+
+
+

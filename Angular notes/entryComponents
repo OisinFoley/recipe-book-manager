@@ -1,0 +1,21 @@
+To load a components dynamically with ComponentFactoryResolvers and host views, you need to add a new property to app.module named entryComponents: [AlertComponent]
+
+The reason for this is that when the app is initialising, Angular scans your template and routes to see what components it may need later.
+
+It knows what's needed based on the component specified in the route, or the selector specified in the template.
+(Remember, how in your component files, you always specify the alias to represent your component in html templates)
+@Component({
+  selector: 'app-auth',
+  templateUrl: './auth.component.html'
+})
+
+Based on the values in your routing module and templates, Angular looks for components in your app.module file's declarations when loading the app.
+
+Because your programatically rendered component isn't in the routing module or explicitly declared in a template, it's not loaded ahead of time by Angular.
+
+In comes the entryComponents property
+
+Just add the following as an additional prop inside of @NgModule({
+
+entryComponents: [AlertComponent] // whatever your directive file is named
+})

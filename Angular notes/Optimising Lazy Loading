@@ -1,0 +1,6 @@
+We can do regular lazy loading, which doens't load a module until we try to navigate toward it.
+
+In our app module, we can also set a "preloading startegy".
+What this does is that it waits until the initial page of the app is loaded, then it starts to download the other modules (while the user is navigating around the initial page) that'll be required later by the app.
+
+This has the benefit that the initial load is still kept small, and the subsequent downloads start to happen while the initial page is laying idle, meaning that the modules we will need later may have finished lazy loading by the time the user navigates to the routes which trigger the load during regular lazy loading

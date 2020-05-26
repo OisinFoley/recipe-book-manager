@@ -1,0 +1,34 @@
+For each test, your component is always initialised with the following snippet (usually, it'll run in your beforeEach block):
+
+a) Access DOM elements
+const fixture = TestBed.createComponent(ShoppingEditComponent);
+fixture.detectChanges();
+
+From there, you call a query on the fixture variable's 'debugElement':
+
+const submitBtn = fixture.debugElement.query(By.css('button[type="submit"]'));
+// Could also be byDirective (routerlink) or custom directive returned this way
+// Of course, you can use a#-users-link or button.primary-btn etc.
+
+Then, if you want to click or access some prop on that element, you access its .nativeElement prop, and then you can call click(), or type, href etc.
+
+Samples:
+const submitBtn = fixture.debugElement.query(By.css('button[type="submit"]'));
+console.log(submitBtn.nativeElement.type);
+submitBtn.nativeElement.click();
+
+const debugElement = fixture.debugElement.query(By.css('a#save-recipes-btn'));
+console.log(debugElement.nativeElement.href);
+
+b) Class props
+Like in part a), you initialise the fixture when beginning the test:
+const fixture = TestBed.createComponent(ShoppingEditComponent);
+fixture.detectChanges();
+
+const app: ShoppingEditComponent = fixture.componentInstance;
+console.log(app.editMode);
+
+// That's it
+// ensure to specify type or else you won't get intellisense when trying to access class props
+
+

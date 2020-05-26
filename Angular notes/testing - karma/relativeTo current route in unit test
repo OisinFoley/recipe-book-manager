@@ -1,0 +1,41 @@
+Access the current route by:
+
+-making the prop of type ActivatedRoute public when injected in your component's constrcutor
+
+- calling '.route' on the componentInstance variable
+
+- creating a relativeTo object and passing it into your expect tohavebeencalled statement
+
+
+Example:
+
+it('should navigate when new recipe button is clicked', async() => {
+      const fixture = TestBed.createComponent(RecipeListComponent);
+      const navigateSpy = spyOn(router, 'navigate');
+      fixture.detectChanges();
+
+      const component = fixture.componentInstance;
+
+      const extras: any = { relativeTo: component.route};
+
+      const debugElement = fixture.debugElement.query(By.css('button#new-recipe-btn'));
+
+      debugElement.nativeElement.click();
+
+      expect(router.navigate).toHaveBeenCalledWith(['new'], extras);
+  });
+
+testbed configure testing module (for reference)
+
+TestBed.configureTestingModule({
+      imports: [
+        RouterTestingModule.withRoutes([]),
+	...
+      ],
+      declarations: [
+        ...
+      ],
+      providers: [
+	...
+      ],
+    });

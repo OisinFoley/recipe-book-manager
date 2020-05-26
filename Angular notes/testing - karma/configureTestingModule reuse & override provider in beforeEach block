@@ -1,0 +1,5 @@
+Answer from:
+https://stackoverflow.com/questions/48811091/how-override-provider-in-angular-5-for-only-one-test
+
+You can use Katja's answer from the above link to reuse TestBed setup in different beforeEach blocks -> the idea is to have a main outer describe block, which does the configureTestingModule setup each time.
+Then, you have multiple inner beforeEach blocks which initialise the fixture, store, router, componentInstance, etc.

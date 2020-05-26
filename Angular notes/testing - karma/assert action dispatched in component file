@@ -1,0 +1,35 @@
+Pepare the spy in one of two ways:
+
+- in beforeEach block
+beforeEach(() => {
+      storeMock = {
+        select:  jasmine.createSpy().and.returnValue(of(mockAuthorisedState)),
+        dispatch: jasmine.createSpy('dispatch'),
+        pipe: jasmine.createSpy('pipe').and.returnValue(from([{
+          requestTimeout: 5000,
+        }]))
+      };
+
+- or on a per-test basis
+
+it('.....', async() => {
+let dispatchSpy = spyOn(storeMock, 'dispatch');
+
+// some action to clikc a button which will trigger the function which ultimately dispatches the action
+
+const debugElement = fixture.debugElement.query(By.css('a#save-recipes-btn'));
+debugElement.nativeElement.click();
+
+// assertions on spy setup in beforeEach block
+expect(storeMock.dispatch).toHaveBeenCalledTimes(1);
+expect(storeMock.dispatch).toHaveBeenCalledWith(
+  new RecipeActions.StoreRecipes()
+);
+
+// assertions on spy setup on per-test basis
+expect(dispatchSpy).toHaveBeenCalledTimes(1);
+expect(dispatchSpy).toHaveBeenCalledWith(
+  new RecipeActions.StoreRecipes()
+);
+
+}

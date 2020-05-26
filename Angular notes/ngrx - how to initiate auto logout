@@ -1,0 +1,82 @@
+- once you've added login and logout functionality via NgRx, your auth service is going to be very lightweight, because you'll now be dispatching actions straight from a component to the store, which'll obviously perform the auth logic (possibly with the help of effects to perform http requests and access localstorage)
+
+your auth service should retain a 1. setLogoutTimer and 2. clearLogoutTimer function though.
+these funcs will be called from the auth effects class.
+what'll happen is that in the signup_start and login_start effects, we will 'tap' into the http response and call the auth service's setLogoutTimer function.
+remember, that NgRx's 'tap' is specifically for just grabbing part of the returned observable and performing some action (which doesn't modify the response, just like we're doing here)
+
+in the auto_login effect, because we're just loading a token from local storage, we just call the auth service's setLogoutTimer as part of the normal flow
+
+we should also call clearLogoutTimer() inside the logout effect
+-----------------------------------------
+Examples:
+
+1.
+authSignup = this.actions$.pipe(
+    ofType(AuthActions.SIGNUP_START),
+    switchMap((signupAction: AuthActions.SignupStart) => {
+      return this.http
+        .post<AuthResponse>(
+          `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${env.firebaseKey}`,
+          {
+            email: signupAction.payload.email,
+            password: signupAction.payload.password,
+            returnSecureToken: true
+          }
+        ).pipe(
+          tap(resData => {
+            this.authService.setLogoutTimer(+resData.expiresIn);
+		// *** SEE HERE ***
+          }),
+          map(resData => {
+            return handleAuthentication(
+              +resData.expiresIn,
+              resData.email,
+              resData.localId,
+              resData.idToken
+            );
+          }),
+          catchError(errorResponse => {
+            return handleError(errorResponse);
+          })
+        );
+    })
+
+2.
+ autoLogin = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+      if (!userData) {
+        return { type: 'DUMMY' };
+      }
+
+      const loadedUser = new User(
+        userData.email,
+        userData.userId,
+        userData.token,
+        userData.tokenExpirationDate
+      );
+
+      if (loadedUser.token) {
+        const expirationDate =
+          new Date(userData.tokenExpirationDate).getTime() -
+          new Date().getTime();
+        this.authService.setLogoutTimer(expirationDate * 1000);
+	// *** SEE HERE ***
+        return new AuthActions.AuthenticateSuccess({ ...loadedUser });
+      }
+      return { type: 'DUMMY' };
+    })
+  );
+
+3.
+authLogout = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      this.authService.clearLogoutTimer();
+	// *** SEE HERE ***
+      localStorage.removeItem('userData');
+      this.router.navigate(['/auth']);
+    })
+  );

@@ -1,0 +1,3 @@
+FYI:
+You can call ngOnInit() directly on a component during a test, but call fixtures.detectChanges() also triggers the hook.
+

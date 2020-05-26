@@ -1,0 +1,24 @@
+To use a bootstrap datepicker (consistent across all browsers), we specify our input as "text" instead of "date", and provide it with a "bsDatepicker" directive
+
+To give it a custom colour (we used red in our dating-app), we need to create a bootstrap config and pass it into our input in the template.
+
+In our component, we define a var with type of BsDatepickerConfig, but BsDatepickerConfig has many props which we may not need if we just want to specify a colour to use for our datepicker.
+
+In comes Typescript's "Partial<T>" utility
+https://www.typescriptlang.org/docs/handbook/utility-types.html#partialt
+
+It allows us to create a type from the type we pass in, but the new type has all its propertes as optional, meaning we can define a new BsDatepickerConfig type, and we can only define the props we want to use.
+
+Example:
+
+import { BsDatepickerConfig } from 'ngx-bootstrap';
+bsConfig: Partial<BsDatepickerConfig>;
+
+ngOnInit() {
+	this.bsConfig = {
+		containerClass: 'theme-red'
+	};
+}
+
+<input ype="text" bsDatepicker [bsConfig]="bsConfig">
+

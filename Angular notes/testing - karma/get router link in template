@@ -1,0 +1,15 @@
+// Initialise component
+const fixture = TestBed.createComponent(HeaderComponent);
+fixture.detectChanges();
+
+// get all anchors
+const debugElements = fixture.debugElement.queryAll(By.css('a'));
+
+// find index of element with href matching desired value
+const authRouterLinkIndex = debugElements.findIndex(de => {
+        console.log('de properties is ' + de.properties['href']);
+        return de.properties['href'] === '/auth';
+});
+
+// assert value isn't undefined
+expect(authRouterLinkIndex).toBeGreaterThan(-1, '/auth index not equal to -1');

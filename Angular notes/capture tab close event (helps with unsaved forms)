@@ -1,0 +1,17 @@
+There's the well-known JS 'confirm' function which allows you to show a custom popup.
+This can be used when navigatng away from a route with unsaved changes.
+
+If the user is trying to close the tab entirely, and has unsaved changes, we can make use of the window.beforeunload event, to show a non-customisable popup to warn the user before they confirm their intention to leave.
+
+@ViewChild('editForm', { static: true }) editForm: NgForm;
+@HostListener('window:beforeunload', ['$event'])
+  unloadNotification($event: any) {
+    if (this.editForm.dirty) {
+      $event.returnValue = true;
+    }
+  }
+
+
+
+This came from "Adding a canDeactivate route guard" in Neil Cummings' course (edit-profile UI building section).
+In the video, he mentioned that the unloadNotification property should appear after all other property declarations.

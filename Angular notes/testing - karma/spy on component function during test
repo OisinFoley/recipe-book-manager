@@ -1,0 +1,25 @@
+If we have a function named onDelete and another named onClear, then we want to tets them separately.
+
+This means that if onDelete calls onClear, and we are trying to test onDelete, then we should spy on onClear, meaning that:
+- onClear does not run as it normally would (it'll just be dead unless we set it up otherwise)
+- we are still only testing the onDelete unit
+
+In your test...
+
+it(......
+
+const fixture = TestBed.createComponent(ShoppingEditComponent);
+const componentInstance: ShoppingEditComponent = fixture.componentInstance;
+
+const dispatchSpy = spyOn(store, 'dispatch');
+const onClearSpy = spyOn(componentInstance, 'onClear');
+
+...do some stuff to trigger the calling of onDelete
+
+// assert that delete was dispatched and that onClear spy was called, hence onDelete ran its code as expected
+
+expect(dispatchSpy).toHaveBeenCalledTimes(1);
+expect(dispatchSpy).toHaveBeenCalledWith(
+  new ShoppingListActions.DeleteIngredient()
+);
+expect(onClearSpy).toHaveBeenCalledTimes(1);

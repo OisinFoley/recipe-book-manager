@@ -1,0 +1,66 @@
+SETTING IT UP IN THE COMPONENT FILE
+
+You can pass built-in validators as args when defining a property on a form, like name, password etc.
+
+It's done like so:
+
+*** 
+	THIS IS VERBOSE AND A SHORTER WAY IS SHOWN BELOW VIA FORMBUILDER
+***
+this.registerForm = new FormGroup({
+   password: new FormControl('',
+   [Validators.required, Validators.minLength(8), Validators.maxLength(32)]),
+});
+
+There is no built-in "compare password with confirmPassword field validator.
+To solve this, you define a validator that is applied on the form itself (rather than the individual form props), and it s passed to the form as an arg, in the same way as validators are passed to a prop.
+Example:
+
+this.registerForm = new FormGroup({
+   password: new FormControl('',
+   [Validators.required, Validators.minLength(8), Validators.maxLength(32)]),
+   confirmPassword: new FormControl('', Validators.required)
+}, this.passwordMatchValidator); // custom validator passed to form
+
+// custom validator accesses the individual form props and does its own validation
+passwordMatchValidator(g: FormGroup) {
+    return g.get('password').value === g.get('confirmPassword').value ? null : { passwordsMismatch: true };
+  }
+
+USING FORMBUILDER TO REDUCER BOILERPLATE
+
+- Define a FormBuilder prop in ctor (fb is var name for this example)
+- Use following snippet
+
+createRegisterForm() {
+    this.registerForm = this.fb.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required, Validators.minLength(8), Validators.maxLength(32)],
+      confirmPassword: ['', Validators.required]
+    }, { validator: this.passwordMatchValidator });
+}
+
+ngOnInit() {
+  this.createRegisterForm();
+}
+
+
+MAKING USE OF IN THE TEMPLATES (CONTAINS CASING GOTCHA)
+
+- hasError() is used to access errors, whether on a 'property level' through the use of built-in angular validation, or on a form level via user-defined validators
+- Some of the built-in validators are minLength and maxLength (note - camelCasing)
+When referencing them in your template though, they're entirely in lowercase:
+
+<div class="invalid-feedback"
+	*** NOTE minlength ON THE FOLLOWING LINE ***
+        *ngIf="registerForm.get('password').hasError('minlength')
+        && registerForm.get('password').touched">Password must be at least 8 characters long</div>
+
+<div class="invalid-feedback"
+	*** NOTE maxlength ON THE FOLLOWING LINE ***
+        *ngIf="registerForm.get('password').hasError('maxlength')
+        && registerForm.get('password').touched">Password must cannot be longer than 32 characters in length</div>
+
+
+
+

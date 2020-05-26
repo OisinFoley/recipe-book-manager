@@ -1,0 +1,11 @@
+If you have a recipe-item component, and it has both a 'recipe' and 'index' @Input, do the following:
+
+const fixture = TestBed.createComponent(RecipeItemComponent);
+const component: RecipeItemComponent = fixture.componentInstance;
+const index = 0;
+
+component.recipe = mockRecipe[index];
+component.index = index;
+fixture.detectChanges();
+
+// after that, the inputs have been bound to the class members

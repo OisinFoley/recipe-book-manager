@@ -1,0 +1,91 @@
+1) Add the following just after your .configureTestingModule statement:
+
+TestBed.overrideComponent(RecipeDetailComponent, {set: {template: ''}});
+
+2) could also just mock the component's dependencies, then instantiate 
+the component class and pass them in.
+
+Example below was built with the "isolated test" section of the following link serving as guidance:
+https://vsavkin.com/three-ways-to-test-angular-2-components-dcea8e90bd8d
+
+*TEST*
+describe(`When 'id' in route params does not match the id of any existing recipes `, () => {
+    let customMockRouter;
+    let customMockRoute;
+    let customMockStore;
+    beforeEach(() => {
+      index = 10;
+    });
+
+    fit(`should redirect the route to '/recipes'`, async(() => {
+      customMockStore = {
+        select: (stateKey: string): Observable<fromRecipes.State> => {
+          return of(componentState.recipes);
+        }
+      };
+      customMockRouter = {
+        routeReuseStrategy : {},
+        navigateByUrl: (route: string): Promise<boolean> => {
+          return new Promise((resolve, reject) => {
+            resolve(true);
+          });
+        }
+      };
+      customMockRoute = {
+        params: of({
+          id: 11
+        })
+      };
+
+      spyOn(customMockRouter, 'navigateByUrl');
+      const c = new RecipeDetailComponent(<any>customMockRouter, <any>customMockRoute, <any>customMockStore);
+
+      expect(customMockRouter.navigateByUrl).toHaveBeenCalledWith('/recipes');
+    }));
+  });
+
+*COMPONENT (pertinent snippet)*
+constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private store: Store<fromApp.AppState>
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => {
+      return false;
+    };
+    this.route.params
+      .pipe(
+        map((params: Params) => {
+          return +params['id'];
+        }),
+        switchMap(id => {
+          this.id = id;
+          return this.store.select('recipes');
+        }),
+        map(recipeState => {
+          return recipeState.recipes.find((recipe, i) => {
+            return i === this.id;
+          });
+        })
+      )
+      .subscribe(recipe => {
+        if (!recipe) {
+          return this.router.navigateByUrl('/recipes');
+        }
+        this.recipe = recipe;
+      });
+  }
+
+Overview of example 2:
+- create objects that will be passed into ctor
+- define the props and funcs that will be called during the flow you intend to test
+- observables are easy to mock, you just wrap the value in an rxjs 'of' operator
+- even though our component's dependencies have types, we can negate this by putting <any> before each of the args when we instantiate the component. 
+without this, we would have to implement all members of the type being mocked within our mock, even though 90% of the members aren't called during testing
+- it's ok to use <any> because we are just mocking the behaviour
+- in the above example, we want to test that navigateByUrl was called, so rather than test the component's prop directly, we check the mocked router object we defined
+
+The above was the RecipeDetail component test for recipe-book, where we test the scenario where we provided an id in the url that doesn't exist among any of our recipes - this isolated test was important because when we run a regular test, the template tries to load after the spy gets called, whereas in an actual real-world scenario, the template would never get a chance to load, due to the redirection taking place (which we spy'd out during a regular test, hence the template loaded when it should have not)
+
+We could of course have just wrapped the whole component in an *ngIf expression, but then that means we would be changing our code just to accomodate the test, which doesn't feel right:
+

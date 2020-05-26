@@ -1,0 +1,22 @@
+Can be used to return an observable, like in the case of a route resolver service
+
+// this returns an observable with no values inside of it
+@Injectable()
+export class MemberDetailResolver implements Resolve<User> {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private alertify: AlertifyService
+  ) {}
+
+  resolve(route: ActivatedRouteSnapshot): Observable<User> {
+    return this.userService.getUser(route.params.id)
+      .pipe(
+        catchError(error => {
+          this.alertify.error('Problem retrieving data');
+          this.router.navigate(['/members']);
+          return of(null); /* SEE HERE */
+        })
+      );
+  }
+}

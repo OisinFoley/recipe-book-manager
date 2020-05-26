@@ -1,0 +1,4 @@
+If creating a routing file for your child module, then instead of calling "import: RouterModule.forRoot(routesArray)"
+like you would in the app.module (which is our root),
+
+we call "import: RouterModule.forChild(routesArray)"

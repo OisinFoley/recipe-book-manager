@@ -1,0 +1,36 @@
+If using provideMockStore, you likely ave a configureTestingModule setup in your beforeEach block, like so:
+
+let store: MockStore<fromApp.AppState>; // this var initialisation happens outside the beforeEach block
+
+TestBed.configureTestingModule({
+        imports: [FormsModule],
+        declarations: [
+          ShoppingEditComponent
+        ],
+        providers: [
+          provideMockStore({ initialState: { ...mockInitialAppState } }),
+          // { provide: Store, useValue: storeMock }
+        ]
+});
+store = TestBed.get<Store<fromApp.AppState>>(Store);
+
+
+If we F12 on MockStore and inspect it, there doesn't seem to be any props at the top level of the class related to dispatch.
+This doesn't matter.
+
+In our test, just create a spy on the store variable, and we are good to go with making assertions:
+
+fit(`should dispatch ShoppingListActions.UpdateIngredient action when submit button is clicked
+      and 'editMode = true'`,
+      fakeAsync(() => {
+	*** SEE THIS LINE ***
+        const dispatchSpy = spyOn(store, 'dispatch');
+        ... do a bunch of stuff to trigger the dispatch in the component's flow
+
+        expect(dispatchSpy).toHaveBeenCalledTimes(1);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+	  // just a sample action from recipe-book app
+          new ShoppingListActions.UpdateIngredient(updatedIngredient)
+        );
+      })
+    );

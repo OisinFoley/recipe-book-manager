@@ -1,0 +1,40 @@
+In your test, setup vars as you normally would for:
+ 
+- a fixture,
+- component instance,
+- and a spy on your dispatch.
+
+- we will also create a spy on the class/component's Subscription type property (e.g. - _subscription), doing so on its 'unsubscribe()' function.
+the key thing here is that we do not define the spy for the subscriber until the component has been initialised.
+
+if we define the spy before the component is initialised, we will get an error -> 
+"Error: <spyOn> : could not find an object to spy upon for unsubscribe()"
+
+
+Just remember to define the spy after the component has finished initialising (remember, tick() and then detectChanges()), and it should be straighforward.
+
+Example:
+
+it(`should dispatch ShoppingListActions.StopEdit action and unsubscribe when ngOnDestroy is called`,
+      fakeAsync(() => {
+// component setup and store spy
+        const fixture = TestBed.createComponent(ShoppingEditComponent);
+        const componentInstance: ShoppingEditComponent = fixture.componentInstance;
+        const dispatchSpy = spyOn(store, 'dispatch');
+
+// tell ngOnInit to run via detectChanges, hence initialising the Subscription type prop
+        tick();
+        fixture.detectChanges();
+
+// create spy, then run the OnDestroy hook and assert
+        const unsubscribeSpy = spyOn(componentInstance['_subscription'], 'unsubscribe');
+
+        componentInstance.ngOnDestroy();
+
+        expect(unsubscribeSpy).toHaveBeenCalledTimes(1);
+        expect(dispatchSpy).toHaveBeenCalledTimes(1);
+        expect(dispatchSpy).toHaveBeenCalledWith(
+          new ShoppingListActions.StopEdit()
+        );
+      })
+    );

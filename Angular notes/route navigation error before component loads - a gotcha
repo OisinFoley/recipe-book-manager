@@ -1,0 +1,44 @@
+https://stackoverflow.com/questions/41678356/router-navigate-does-not-call-ngoninit-when-same-page
+
+Sometimes, you want to prevent a component loading due to the props that were passed into it (or lack of).
+If you try to navigate away from the component, you may still get an error because you're navigating from a child prop back to its parent.
+
+We saw this with recipe-book when navigating from recipes/edit/{id}
+back to recipes.
+The recipe-detail component (which represents the recipes/edit/{id} route) was trying to navigate back to its parent, because the store contained a list of recipes, but the id provided in the url was not in the list.
+
+This meant that if we tried to load the template, we would have a null recipe, and we ended up with UI errors, even if the navigation happened successfully (and we went back to /recipes).
+
+The reason for this is that by default, Angular will try to reuse route props when navigating from a child to a parent (remember that recipes/edit/{id} is a child of /recipes).
+To mitigate this issue, we must tell Angular not to reuse the route in our constructor, like so:
+
+this.router.routeReuseStrategy.shouldReuseRoute = () => {
+    return false;
+};
+
+This means we can successfully avoid loading the component (hence no UI errors) further down our constructor's code base:
+
+this.route.params
+      .pipe(
+        map((params: Params) => {
+          return +params['id'];
+        }),
+        switchMap(id => {
+          this.id = id;
+          return this.store.select('recipes');
+        }),
+        map(recipeState => {
+          return recipeState.recipes.find((recipe, i) => {
+            return i === this.id;
+          });
+        })
+      )
+	// *** this next part is crucial ***
+      .subscribe(recipe => {
+        if (!recipe) {
+          return this.router.navigateByUrl('/recipes');
+        }
+        this.recipe = recipe;
+      });
+
+
