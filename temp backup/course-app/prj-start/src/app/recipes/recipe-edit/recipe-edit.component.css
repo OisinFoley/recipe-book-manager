@@ -1,8 +1,0 @@
-input.ng-invalid.ng-touched,
-textarea.ng-invalid.ngtouched {
-  border: 1px solid red;
-}
-
-#ingredient-interacton-container {
-  margin-top: 10px;
-}
