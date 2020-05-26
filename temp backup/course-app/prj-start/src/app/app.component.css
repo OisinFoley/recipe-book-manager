@@ -1,0 +1,13 @@
+.empty-spacing {
+  margin: 0 5px;
+  visibility: hidden;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.btn-dimensions {
+  min-width: 130px;
+  min-height: 35px;
+}
