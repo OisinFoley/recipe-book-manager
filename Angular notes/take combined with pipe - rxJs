@@ -1,9 +1,0 @@
-Take combined with pipe allows you to extract the first n of emitted values
-   then immediately unsubscribe from future updates
-
-this.authService.user.pipe(take(1)).subscribe(user => {
-	// get the latest value for authService's user prop, then unsubscribe from future updates
-	// this ensures we access the value only when needed, even though it's a form of observable
-});
-
-'take' is a good way to avoid strange behaviors whereby the app tries to updates the observable later (whether that happened correctly or incorrectly is another question) because take unsubscribes immediately, allowing us to eliminate a source of bugs

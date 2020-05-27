@@ -1,3 +1,0 @@
-as simple as using spyOn(obj, prop).and.returnValue(true)
-
-e.g. - spyOn(window, 'confirm').and.returnValue(true);

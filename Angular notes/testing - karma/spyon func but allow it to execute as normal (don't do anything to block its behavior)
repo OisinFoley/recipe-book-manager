@@ -1,6 +1,0 @@
-const fixture = TestBed.createComponent(RecipeDetailComponent);
-const component: RecipeDetailComponent = fixture.componentInstance;
-const onAddToShoppingListSpy =
-        spyOn(component, 'onAddToShoppingList').and.callThrough();
-
-the key is to use .and.callThrough();

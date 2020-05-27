@@ -1,3 +1,0 @@
-the shallow referencing nature of javascript means that property changes on an object may not be enough sometimes to trigger an update.
-
-ngrx provides a whole new state, meaning objects are updated by taking the old object plus the updated props, whereas unchanged objects are passed again to the updated state, meaning their reference stays the same when necessary

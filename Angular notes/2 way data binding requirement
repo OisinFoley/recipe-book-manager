@@ -1,5 +1,0 @@
-formsModule is required in your component file
-
-import { FormsModule } from '@angular/forms'; 
-
-also, add FormsModule to imports[] in AppModule

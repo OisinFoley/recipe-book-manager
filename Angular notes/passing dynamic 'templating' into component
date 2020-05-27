@@ -1,8 +1,0 @@
-<my-comp>
-	<some-other-templating>
-<my-comp>
-
-by default angular will ignore the some-other-templating when inside my-comp
-the way to get the some-other-templating into my-comp is to decide where in my-comp you
-would like to display this dynamic templating, and place the following directive:
-	<ng-content> </ng-content>

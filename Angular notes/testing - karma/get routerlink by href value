@@ -1,7 +1,0 @@
-const fixture = TestBed.createComponent(HeaderComponent);
-        fixture.detectChanges();
-
-const debugElements = fixture.debugElement.query(By.css('a[href*="/auth"]'));
-
-// you'll see the values associate with the router object
-console.log(debugElements.attributes);

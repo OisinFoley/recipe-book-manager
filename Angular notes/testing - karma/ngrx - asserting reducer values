@@ -1,4 +1,0 @@
-Esnure to use .toEqual instead of .toBe so that you get deep equality checking.
-Otherwise, your assertions might fail.
-
-Important to keep this in mind, because we would have used .toBe when testing a lot of component logic outside of ngrx, so it's easy to subconciously use the same equality assertion function

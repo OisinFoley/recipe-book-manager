@@ -1,5 +1,0 @@
-initial impression is very verbose
-	content you define between opening and closing tag of user-defined componeont is lost 
-	by default
-	need to use a directive in order to pass it in, why, what does it protect?
-	child comp must have <ng-content> in order to embed the wrapped content

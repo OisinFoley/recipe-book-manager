@@ -1,6 +1,0 @@
-const fixture = TestBed.createComponent(HeaderComponent);
-fixture.detectChanges();
-
-const debugElements = fixture.debugElement.query(By.css('a[href*="/auth"]'));
-
-console.log(debugElements.nativeElement.textContent);

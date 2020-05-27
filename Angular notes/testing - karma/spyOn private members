@@ -1,3 +1,0 @@
-Put <any> a the type of the spy before you provide your arguments
-
-spyOn<any>(effects, '_emitMsgToAlertServiceRelay');

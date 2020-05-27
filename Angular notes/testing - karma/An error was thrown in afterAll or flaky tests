@@ -1,5 +1,0 @@
-This may be due to defining the function in your beforeEach block as async
-
-beforeEach(async() => {....}))
-
-This can cause race conditions and due to your tests running randomly, it may cause flaky tests
